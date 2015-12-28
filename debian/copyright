@@ -1,0 +1,292 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: XScreenSaver
+Upstream-Contact: Jamie Zawinski <jwz@jwz.org>
+Source: http://www.jwz.org/xscreensaver/
+
+Files: *
+       hacks/noseguy.*
+       hacks/hyperball.*
+Copyright: 1991-2008 Jamie Zawinski <jwz@jwz.org>
+           1985-1990 Dan Heller <argv@danheller.com>
+           2000 Joe Keane
+License: Other
+ Permission to use, copy, modify, distribute, and sell this software and its
+ documentation for any purpose is hereby granted without fee, provided that
+ the above copyright notice appear in all copies and that both that
+ copyright notice and this permission notice appear in supporting
+ documentation.  No representations are made about the suitability of this
+ software for any purpose.  It is provided "as is" without express or
+ implied warranty.
+
+Files: hacks/flame.* hacks/bouboule.* hacks/hopalong.*
+Copyright: © 1988-1991 Patrick J. Naughton
+License: Other
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted,
+ provided that the above copyright notice appear in all copies and that
+ both that copyright notice and this permission notice appear in
+ supporting documentation.
+
+Files: hacks/xanalogtv.* hacks/analogtv.*
+       hacks/squiral.*
+       hacks/wormhole.*
+       hacks/xspirograph.c
+       hacks/petri.*
+       hacks/nerverot.*
+       hacks/xflame.*
+       hacks/bumps.*
+       hacks/glx/tangram.*
+       hacks/glx/timetunnel.*
+       hacks/glx/stonerview*
+       hacks/celtic.*
+       hacks/interference.*
+       hacks/epicycle.*
+       hacks/metaballs.*
+       hacks/penetrate.*
+       hacks/kaleidescope.*
+       hacks/truchet.*
+       hacks/anemone.*
+       hacks/blaster.*
+       hacks/rotor.man
+       hacks/demon.*
+       hacks/interaggregate.*
+       hacks/ccurve.* hacks/wander.*
+       hacks/spotlight.*
+       hacks/zoom.*
+       hacks/speedmine.*
+       hacks/popsquares.*
+       hacks/fireworkx*
+       hacks/xsublim.*
+       hacks/imsmap.*
+       hacks/vermiculate.*
+       hacks/abstractile.*
+       hacks/asm6502.*
+       hacks/pedal.*
+Copyright: 2003 Trevor Blackwell <tlb@tlb.org>
+           1999 Jeff Epler <jepler@inetnebr.com>
+           2004 Jon Rafkind
+           2000 Rohit Singh <rohit_singh@hotmail.com>
+           1992-2000 Dan Bornstein <danfuzz@milk.com>
+           1996-2002 Carsten Haitzler <raster@redhat.com>
+           1999-2006 Shane Smit
+           2005 Sean Brennan <zettix@yahoo.com>
+           2005 Jeremy English <jhe@jeremyenglish.org>
+           1998-2001 Andrew Plotkin <erkyrath@eblong.com>
+           2006 Max Froumentin <max@lapin-bleu.net>
+           1998 Hannu Mallat <hmallat@cs.hut.fi>
+           1998 James Youngman <jay@gnu.org>
+           2002-2003 W.P. van Paassen <peter@paassen.tmfweb.nl>
+           1999 Adam Miller
+           1997-2006 Ron Tapia <tapia@nmia.com>
+           1998 Adrian Likins <adrian@gimp.org>
+           1999 Jonathan H. Lin <jonlin@tesuji.org>
+           2001-2002 Gabriel Finch
+           2002 Tom Lawrence
+           1995-2002 David Bagley
+           2003 J. Tarbell
+           1998-2002 Rick Campbell <rick@campbellcentral.org>
+           1999 Rick Schultz
+           2000 James Macnicol
+           2001 Conrad Parker <conrad@deephackmode.org>
+           2003 Levi Burton <donburton@sbcglobal.net>
+           1999-2007 Rony B Chandran <ronybc@asia.com>
+           1999-2000 Greg Knauss <greg@eod.com>
+           1992-2008 Juergen Nickelsen and Jamie Zawinski
+           2004 Steve Sundstrom
+           2002 Tyler Pierce
+           Jeremy English <jhe@jeremyenglish.org>
+           1994 Carnegie Mellon University
+License: Other
+ Permission to use, copy, modify, distribute, and sell this software and its
+ documentation for any purpose is hereby granted without fee, provided that
+ the above copyright notice appear in all copies and that both that copyright
+ notice and this permission notice appear in supporting documentation.
+ No representations are made about the suitability of this software for any
+ purpose.  It is provided "as is" without express or implied warranty.
+
+Files: hacks/lissie.*
+       hacks/glx/moebius.*
+       hacks/glx/glcells.*
+       hacks/glx/tunnel_draw.*
+       hacks/ant.c
+       hacks/rotor.c
+       hacks/pacman*
+       hacks/flow.*
+       hacks/braid.*
+       hacks/flag.*
+       hacks/triangle.*
+       hacks/penrose.*
+       hacks/automata.h
+       hacks/laser.*
+       hacks/mountain.*
+       hacks/juggle.*
+       hacks/euler2d.* hacks/polyominoes.*
+       hacks/sierpinski.*
+       hacks/vines.*
+       hacks/grav.*
+       hacks/spiral.*
+Copyright: 1996-2002 Alexander Jolk <ub9x@rz.uni-karlsruhe.de>
+           1995 David Bagley
+           1997-2002 Marcelo F. Vianna <mfvianna@centroin.com.br>
+           2007 Matthias Toussaint
+           2002-2004 E. Lassauge
+           1991 Patrick J. Naughton
+           2002 Edwin de Jong <mauddib@gmx.net>
+           1996 Tim Auckland <Tim.Auckland@Procket.com>
+           1995 John Neil
+           1996 Charles Vidal <vidalc@univ-mlv.fr>
+           1995 Tobias Gloth
+           1996 Timo Korvola <tkorvola@dopey.hut.fi>
+           1995 David Bagley
+           1995 Pascal Pensa <pensa@aurora.unice.fr>
+           1995 Pascal Pensa <pensa@aurora.unice.fr>
+           1996 Tim Auckland <tda10.geo@yahoo.com>
+           2000 Stephen Montgomery-Smith <stephen@math.missouri.edu>
+           1996 Desmond Daignault
+           1997 Tracy Camp <campt@hurrah.com>
+           1993 Greg Bowering
+           1994 Darrick Brown
+License: Other
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted,
+ provided that the above copyright notice appear in all copies and that
+ both that copyright notice and this permission notice appear in
+ supporting documentation.
+ .
+ This file is provided AS IS with no warranties of any kind.  The author
+ shall have no liability with respect to the infringement of copyrights,
+ trade secrets or any patents by this file or any part thereof.  In no
+ event will the author be liable for any lost revenue or profits or
+ other special, indirect and consequential damages.
+
+Files: hacks/munch.*
+Copyright: © 1997 Tim Showalter
+License: Other
+ Permission is granted to copy, modify, and use this as long
+ as this notice remains intact.  No warranties are expressed or implied.
+ CMU Sucks.
+
+Files: hacks/kumppa.*
+Copyright: © 1998-2002 Teemu Suutari <temisu@utu.fi>
+License: X11
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+ .
+ Except as contained in this notice, the name of the X Consortium shall
+ not be used in advertising or otherwise to promote the sale, use or
+ other dealings in this Software without prior written authorization
+ from the X Consortium.
+
+Files: hacks/crystal.*
+Copyright: © 1997 Jouk Jansen <joukj@crys.chem.uva.nl>
+License: Other
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted,
+ provided that the above copyright notice appear in all copies and that
+ both that copyright notice and this permission notice appear in
+ supporting documentation.
+ .
+ This file is provided AS IS with no warranties of any kind.  The author
+ shall have no liability with respect to the infringement of copyrights,
+ trade secrets or any patents by this file or any part thereof.  In no
+ event will the author be liable for any lost revenue or profits or
+ other special, indirect and consequential damages.
+ .
+ The author should like to be notified if changes have been made to the
+ routine.  Response will only be guaranteed when a VMS version of the
+ program is available.
+
+Files: hacks/maze.* hacks/sphere.*
+Copyright: © 1988 Sun Microsystems
+License: Other
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted,
+ provided that the above copyright notice appear in all copies and that
+ both that copyright notice and this permission notice appear in
+ supporting documentation, and that the names of Sun or MIT not be
+ used in advertising or publicity pertaining to distribution of the
+ software without specific prior written permission. Sun and M.I.T.
+ make no representations about the suitability of this software for
+ any purpose. It is provided "as is" without any express or implied warranty.
+ .
+ SUN DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ PURPOSE. IN NO EVENT SHALL SUN BE LIABLE FOR ANY SPECIAL, INDIRECT
+ OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+ OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+ OR PERFORMANCE OF THIS SOFTWARE.
+
+Files: hacks/glx/chessmodels.*
+Copyright: © 2006 John-Paul Gignac <jjgignac@users.sf.net>
+           © 2002 Robert Ancell <bob27@users.sourceforge.net>
+	   © 2002 Michael Duelli <duelli@users.sourceforge.net>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ .
+ On Debian GNU/Linux systems, the complete text of the GNU General
+ Public License can be found in `/usr/share/common-licenses/GPL-2'.
+
+Files: hacks/glx/glut*
+Copyright: © 1989-1995 Mark J. Kilgard
+License: Other
+ This program is freely distributable without licensing fees
+ and is provided without guarantee or warrantee expressed or
+ implied. This program is -not- in the public domain.
+
+Files: debian/*
+Copyright: © 1996-2002 Larry Daffner <vizzie@airmail.net>
+           © 2002 Colin Watson <cjwatson@debian.org>
+	   © 2002-2005 Karl Ramm <kcr@debian.org>
+	   © 2005-2007 Ralf Hildebrandt <ralf.hildebrandt@charite.de>
+	   © 2005-2007 Josselin Mouette <joss@debian.org>
+	   © 2007-2009 Jose Luis Rivas <ghostbar@debian.org>
+	   © 2007-2012 Tormod Volden <debian.tormod@gmail.com>
+License: MIT
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+

@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=WindupRobot
+Exec=/usr/lib/xscreensaver/winduprobot -root
+TryExec=/usr/lib/xscreensaver/winduprobot
+Comment=A swarm of wind-up toy robots wander around the table-top, bumping into each other. Each robot contains a mechanically accurate gear system inside, which you can see when the robot's shell occasionally fades to transparency. Also, sometimes a cartoony word bubble pops up above a robot, full of random text. Written by Jamie Zawinski.

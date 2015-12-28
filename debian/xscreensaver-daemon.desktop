@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=XScreensaver
+TryExec=xscreensaver
+Exec=/usr/share/xscreensaver/xscreensaver-wrapper.sh -nosplash
+NoDisplay=true
+X-KDE-StartupNotify=false
+# NotShowIn=KDE;GNOME;
+Comment=The XScreensaver daemon

@@ -1,0 +1,39 @@
+Description: Allow xscreensaver-getimage-file to work sequentially
+ allowing users to run a slideshow in order.
+ .
+ To use in this mode, edit ~/.xscreensaver updating:
+    chooseRandomImages: True
+    imageDirectory: /path/to/ordered/pictures
+ And then:
+    echo 0 > ~/.xscreensaver-image-index
+ Then run:
+    /usr/lib/xscreensaver/glslideshow -duration 2 -pan 2
+ To disable:
+    rm ~/.xscreensaver-image-index
+Author: Dustin Kirkland <kirkland@ubuntu.com>
+Forwarded: no
+Last-Update: 2014-02-21
+
+--- a/driver/xscreensaver-getimage-file
++++ b/driver/xscreensaver-getimage-file
+@@ -843,7 +843,20 @@
+   my $max_tries = 50;
+   for (my $i = 0; $i < $max_tries; $i++) {
+ 
++    # Default to random image
+     my $n = int (rand ($#all_files + 1));
++
++    # But check if the user wants a sequential image
++    if (open(IN, "<$ENV{HOME}/.xscreensaver-image-index")) {
++         read(IN, $n, 8);
++         close(IN);
++         $n++;
++         if (open (IN, ">$ENV{HOME}/.xscreensaver-image-index")) {
++             print(IN $n--);
++             close(IN);
++         }
++    }
++
+     my $file = $all_files[$n];
+     if (large_enough_p ($file)) {
+       if (! $url) {

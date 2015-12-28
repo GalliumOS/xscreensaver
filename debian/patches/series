@@ -1,0 +1,26 @@
+10_upstream_skip_retired_hacks.patch
+20_hacks_man_section.patch
+20_hacks_maze_xpm_libs.patch
+20_skip_install-pam.patch
+21_driver_xscreensaver-getimage-video
+22_hacks_barcode.patch
+23_hacks_glx_glsnake.patch
+
+# These two go together
+30_hacks_xanalogtv.patch
+31_utils_images_logo-50-bad-xpm.patch
+
+# All these modify XScreenSaver.ad.in
+50_debian_branding.patch
+51_generalize_external_commands.patch
+52_standard_time_format.patch
+53_default_newLoginCommand.patch
+54_no_dnalogo_hack.patch
+55_add_unicode_hack.patch
+56_password_dialog_reworded.patch
+
+57_grabDesktopImages_default_off.patch
+80_Makefile_in-clean-fix.patch
+60_sequential_glslideshow.patch
+90_ubuntu-branding.patch
+91_replace-gdmflexiserver.patch

@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=Geodesic
+Exec=/usr/lib/xscreensaver/geodesic -root
+TryExec=/usr/lib/xscreensaver/geodesic
+Comment=Animates a mesh geodesic sphere of increasing and decreasing complexity. A geodesic sphere is an icosohedron whose equilateral faces are sub-divided into non-equilateral triangles to more closely approximate a sphere. The animation shows the equilateral triangles subdivided into four coplanar equilateral triangles; and then inflated outward, causing the sub-triangles to no longer be equilateral, but to more closely approximate the surface of a sphere. http://en.wikipedia.org/wiki/Geodesic_dome http://en.wikipedia.org/wiki/Buckminster_Fuller Written by Jamie Zawinski.

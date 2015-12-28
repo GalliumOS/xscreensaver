@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=Kaleidocycle
+Exec=/usr/lib/xscreensaver/kaleidocycle -root
+TryExec=/usr/lib/xscreensaver/kaleidocycle
+Comment=Draw a ring composed of tetrahedra connected at the edges that twists and rotates toroidally. When a series of tetrahedra are joined at the edges in a loop, it is possible for them to rotate continously through the center without deforming. This only works with an even number of tetrahedra, and there must be eight or more, or they don't fit. Written by Jamie Zawinski.

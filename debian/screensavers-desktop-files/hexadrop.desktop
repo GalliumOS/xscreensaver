@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=Hexadrop
+Exec=/usr/lib/xscreensaver/hexadrop -root
+TryExec=/usr/lib/xscreensaver/hexadrop
+Comment=Draws a grid of hexagons or other shapes and drops them out. http://en.wikipedia.org/wiki/Tiling_by_regular_polygons Written by Jamie Zawinski.

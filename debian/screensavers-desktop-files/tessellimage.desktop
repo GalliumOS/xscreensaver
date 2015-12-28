@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=Tessellimage
+Exec=/usr/lib/xscreensaver/tessellimage -root
+TryExec=/usr/lib/xscreensaver/tessellimage
+Comment=Converts an image to triangles using Delaunay tessellation, and animates the result at various depths. More triangles are allocated to visually complex parts of the image. This is accomplished by first computing the first derivative of the image: the distance between each pixel and its neighbors (which is essentially edge detection or embossing). Then the Delaunay control points are chosen by selecting those pixels whose distance value is above a certain threshold: those are the pixels that have the largest change in color/brightness. http://en.wikipedia.org/wiki/Delaunay_triangulation Written by Jamie Zawinski.

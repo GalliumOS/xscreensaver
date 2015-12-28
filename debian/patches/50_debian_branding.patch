@@ -1,0 +1,18 @@
+Index: xscreensaver/driver/XScreenSaver.ad.in
+===================================================================
+--- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:48:41.000000000 +0200
++++ xscreensaver/driver/XScreenSaver.ad.in	2014-10-07 22:48:41.000000000 +0200
+@@ -59,11 +59,11 @@
+ *ignoreUninstalledPrograms: False
+ *authWarningSlack:	20
+ 
+-*textMode:		file
++*textMode:		url
+ *textLiteral:		XScreenSaver
+ *textFile:		@DEFAULT_TEXT_FILE@
+ *textProgram:		fortune
+-*textURL:		http://en.wikipedia.org/w/index.php?title=Special:NewPages&feed=rss
++*textURL:		http://planet.debian.org/rss20.xml
+ 
+ *overlayTextForeground:	#FFFF00
+ *overlayTextBackground:	#000000

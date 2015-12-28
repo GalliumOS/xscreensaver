@@ -1,0 +1,16 @@
+
+Bug #679974: xscreensaver-data: disable hacks that reveal the desktop
+
+Index: xscreensaver/driver/XScreenSaver.ad.in
+===================================================================
+--- xscreensaver.orig/driver/XScreenSaver.ad.in	2012-10-18 22:57:01.000000000 +0200
++++ xscreensaver/driver/XScreenSaver.ad.in	2012-10-18 22:58:52.000000000 +0200
+@@ -38,7 +38,7 @@
+ *dpmsStandby:		2:00:00
+ *dpmsSuspend:		2:00:00
+ *dpmsOff:		4:00:00
+-*grabDesktopImages:	True
++*grabDesktopImages:	False
+ *grabVideoFrames:	False
+ *chooseRandomImages:	@DEFAULT_IMAGES_P@
+ ! This can be a local directory name, or the URL of an RSS or Atom feed.

@@ -1,0 +1,12 @@
+Index: xscreensaver/driver/XScreenSaver.ad.in
+===================================================================
+--- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:49:02.000000000 +0200
++++ xscreensaver/driver/XScreenSaver.ad.in	2014-10-07 22:49:02.000000000 +0200
+@@ -262,7 +262,6 @@
+ 				xspirograph -root			    \n\
+ @GL_KLUDGE@ GL: 				circuit -root				    \n\
+ @GL_KLUDGE@ GL: 				dangerball -root			    \n\
+-- GL: 				dnalogo -root				    \n\
+ @GL_KLUDGE@ GL: 				engine -root				    \n\
+ @GL_KLUDGE@ GL: 				flipscreen3d -root			    \n\
+ @GL_KLUDGE@ GL: 				gltext -root				    \n\

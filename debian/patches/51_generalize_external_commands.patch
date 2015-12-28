@@ -1,0 +1,36 @@
+Index: xscreensaver/driver/XScreenSaver.ad.in
+===================================================================
+--- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:48:46.000000000 +0200
++++ xscreensaver/driver/XScreenSaver.ad.in	2014-10-07 22:48:46.000000000 +0200
+@@ -99,9 +99,13 @@
+ !
+ !   Gnome 2.4, 2.6: (yelp can't display man pages, as of 2.6.3)
+ !
+-@GNOME24@*loadURL: @WITH_BROWSER@ '%s'
+-@GNOME24@*manualCommand: gnome-terminal --title '%s manual' \
+-@GNOME24@		--command '/bin/sh -c "man %s; read foo"'
++! Debian: If we _build_ with GNOME this one will be used,
++! but the built packages should work on non-GNOME systems as well.
++! Use yelp if installed, since it works fine in current GNOME.
++@GNOME24@*loadURL: x-www-browser '%s'
++@GNOME24@*manualCommand: yelp man:%s || \
++@GNOME24@			x-terminal-emulator -title '%s manual' \
++@GNOME24@			  -e /bin/sh -c "man %s"
+ !
+ !   Gnome 2.2:
+ !
+@@ -116,9 +120,11 @@
+ !
+ !   non-Gnome systems:
+ !
+-@NOGNOME@*loadURL: firefox '%s' || mozilla '%s' || netscape '%s'
+-@NOGNOME@*manualCommand: xterm -sb -fg black -bg gray75 -T '%s manual' \
+-@NOGNOME@		    -e /bin/sh -c 'man "%s" ; read foo'
++! Debian: This is used when _building_ without GNOME
++@NOGNOME@*loadURL: x-www-browser '%s'
++@NOGNOME@*manualCommand: yelp man:%s || \
++@NOGNOME@			x-terminal-emulator -title '%s manual' \
++@NOGNOME@			  -e /bin/sh -c 'man "%s"'
+ 
+ 
+ ! The format used for printing the date and time in the password dialog box

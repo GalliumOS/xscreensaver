@@ -1,0 +1,11 @@
+--- a/driver/XScreenSaver.ad.in
++++ b/driver/XScreenSaver.ad.in
+@@ -63,7 +63,7 @@
+ *textLiteral:		XScreenSaver
+ *textFile:		@DEFAULT_TEXT_FILE@
+ *textProgram:		fortune
+-*textURL:		http://planet.debian.org/rss20.xml
++*textURL:		http://fridge.ubuntu.com/node/feed
+ 
+ *overlayTextForeground:	#FFFF00
+ *overlayTextBackground:	#000000
