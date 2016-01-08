@@ -7,106 +7,34 @@ Last-Update: 2014-09-07
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/driver/XScreenSaver.ad.in
 +++ b/driver/XScreenSaver.ad.in
-@@ -38,7 +38,7 @@
- *dpmsStandby:		2:00:00
- *dpmsSuspend:		2:00:00
- *dpmsOff:		4:00:00
--*grabDesktopImages:	False
-+*grabDesktopImages:	True
- *grabVideoFrames:	False
- *chooseRandomImages:	@DEFAULT_IMAGES_P@
- ! This can be a local directory name, or the URL of an RSS or Atom feed.
-@@ -59,11 +59,11 @@
- *ignoreUninstalledPrograms: False
- *authWarningSlack:	20
- 
--*textMode:		url
-+*textMode:		file
- *textLiteral:		XScreenSaver
- *textFile:		@DEFAULT_TEXT_FILE@
- *textProgram:		fortune
--*textURL:		http://fridge.ubuntu.com/node/feed
-+*textURL:		http://en.wikipedia.org/w/index.php?title=Special:NewPages&feed=rss
- 
- *overlayTextForeground:	#FFFF00
- *overlayTextBackground:	#000000
-@@ -99,13 +99,9 @@
+@@ -145,7 +145,7 @@
  !
- !   Gnome 2.4, 2.6: (yelp can't display man pages, as of 2.6.3)
- !
--! Debian: If we _build_ with GNOME this one will be used,
--! but the built packages should work on non-GNOME systems as well.
--! Use yelp if installed, since it works fine in current GNOME.
--@GNOME24@*loadURL: x-www-browser '%s'
--@GNOME24@*manualCommand: yelp man:%s || \
--@GNOME24@			x-terminal-emulator -title '%s manual' \
--@GNOME24@			  -e /bin/sh -c "man %s"
-+@GNOME24@*loadURL: @WITH_BROWSER@ '%s'
-+@GNOME24@*manualCommand: gnome-terminal --title '%s manual' \
-+@GNOME24@		--command '/bin/sh -c "man %s; read foo"'
- !
- !   Gnome 2.2:
- !
-@@ -120,18 +116,14 @@
- !
- !   non-Gnome systems:
- !
--! Debian: This is used when _building_ without GNOME
--@NOGNOME@*loadURL: x-www-browser '%s'
--@NOGNOME@*manualCommand: yelp man:%s || \
--@NOGNOME@			x-terminal-emulator -title '%s manual' \
--@NOGNOME@			  -e /bin/sh -c 'man "%s"'
-+@NOGNOME@*loadURL: firefox '%s' || mozilla '%s' || netscape '%s'
-+@NOGNOME@*manualCommand: xterm -sb -fg black -bg gray75 -T '%s manual' \
-+@NOGNOME@		    -e /bin/sh -c 'man "%s" ; read foo'
- 
- 
- ! The format used for printing the date and time in the password dialog box
- ! (see the strftime(3) manual page for details.)
--*dateFormat:		%Y-%m-%d %H:%M:%S
--! Original upstream format
--! *dateFormat:		%d-%b-%y (%a); %I:%M %p
-+*dateFormat:		%d-%b-%y (%a); %I:%M %p
- ! To show the time only:
- ! *dateFormat:		%I:%M %p
- ! For 24 hour time:
-@@ -143,9 +135,7 @@
- ! For Gnome: probably "gdmflexiserver -ls".  KDE, probably "kdmctl reserve".
- ! Or maybe yet another wheel-reinvention, "lxdm -c USER_SWITCH".
- !
--! @NEW_LOGIN_COMMAND_P@*newLoginCommand:	@NEW_LOGIN_COMMAND@
--! Debian: Hard-wire the command in case the build machine does not have gdm
+ ! @NEW_LOGIN_COMMAND_P@*newLoginCommand:	@NEW_LOGIN_COMMAND@
+ ! Debian: Hard-wire the command in case the build machine does not have gdm
 -*newLoginCommand:	gdmflexiserver -ls
-+@NEW_LOGIN_COMMAND_P@*newLoginCommand:	@NEW_LOGIN_COMMAND@
++*newLoginCommand:	dm-tool switch-to-greeter
  
  
  ! Turning on "installColormap" on 8-bit systems interacts erratically with
-@@ -195,7 +185,6 @@
- 				goop -root				    \n\
- 				grav -root				    \n\
- 				ifs -root				    \n\
--				unicode -root				    \n\
- @GL_KLUDGE@ GL: 				jigsaw -root				    \n\
- 				julia -root				    \n\
- -				kaleidescope -root			    \n\
-@@ -263,6 +252,7 @@
- 				xspirograph -root			    \n\
- @GL_KLUDGE@ GL: 				circuit -root				    \n\
- @GL_KLUDGE@ GL: 				dangerball -root			    \n\
-+- GL: 				dnalogo -root				    \n\
- @GL_KLUDGE@ GL: 				engine -root				    \n\
- @GL_KLUDGE@ GL: 				flipscreen3d -root			    \n\
- @GL_KLUDGE@ GL: 				gltext -root				    \n\
-@@ -424,11 +414,10 @@
- *Dialog.shadowThickness:	2
+--- a/configure
++++ b/configure
+@@ -11685,7 +11685,7 @@
+ ###############################################################################
  
- *passwd.heading.label:		XScreenSaver %s
--*passwd.body.label:		Please enter your password.
-+*passwd.body.label:		This screen is locked.
- *passwd.unlock.label:		OK
- *passwd.login.label:		New Login
- *passwd.user.label:		Username:
--*passwd.passwd.label:		Password:
- *passwd.thermometer.width:	8
- *passwd.asterisks:              True
- *passwd.uname:                  True
+ with_login_manager_req=unspecified
+-default_login_manager_1='gdmflexiserver -ls'
++default_login_manager_1='dm-tool switch-to-greeter'
+ default_login_manager_2='kdmctl reserve'
+ 
+ 
+--- a/configure.in
++++ b/configure.in
+@@ -2436,7 +2436,7 @@
+ ###############################################################################
+ 
+ with_login_manager_req=unspecified
+-default_login_manager_1='gdmflexiserver -ls'
++default_login_manager_1='dm-tool switch-to-greeter'
+ default_login_manager_2='kdmctl reserve'
+ 
+ AC_ARG_WITH(login-manager,

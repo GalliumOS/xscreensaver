@@ -1,10 +1,3 @@
-xscreensaver (5.30-1ubuntu1-galliumos1) vivid; urgency=medium
-
-  * - debian/patches/91_replace-gdmflexiserver.patch:
-      + Use lxdm -c USER_SWITCH instead of gdmflexiserver for user-switching,
-
- -- Hugh Greenberg <hugh@galliumos.org>  Fri, 25 Dec 2015 02:17:23 -0500
-
 xscreensaver (5.30-1ubuntu1) vivid; urgency=medium
 
   * Merge from Debian unstable. (LP: #1406825) Remaining changes:
