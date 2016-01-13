@@ -1,3 +1,9 @@
+xscreensaver (5.30-1ubuntu1-galliumos2) vivid; urgency=medium
+
+  * Copied pam file from slim package to fix an issue with ecryptfs
+
+ -- Hugh Greenberg <hugh@galliumos.org>  Tue, 12 Jan 2016 02:17:23 -0500
+
 xscreensaver (5.30-1ubuntu1-galliumos1) vivid; urgency=medium
 
   * - debian/patches/91_replace-gdmflexiserver.patch:
