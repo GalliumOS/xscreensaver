@@ -1,4 +1,4 @@
-# Auto-generated: Thu Sep 11 10:07:58 PDT 2014
+# Auto-generated: Sat Oct 24 12:15:03 PDT 2015
 driver/demo-Gtk-conf.c
 driver/demo-Gtk.c
 driver/screensaver-properties.desktop.in
@@ -16,6 +16,7 @@ hacks/config/atlantis.xml
 hacks/config/attraction.xml
 hacks/config/atunnel.xml
 hacks/config/barcode.xml
+hacks/config/binaryring.xml
 hacks/config/blaster.xml
 hacks/config/blinkbox.xml
 hacks/config/blitspin.xml
@@ -35,6 +36,7 @@ hacks/config/carousel.xml
 hacks/config/ccurve.xml
 hacks/config/celtic.xml
 hacks/config/circuit.xml
+hacks/config/cityflow.xml
 hacks/config/cloudlife.xml
 hacks/config/companioncube.xml
 hacks/config/compass.xml
@@ -81,6 +83,7 @@ hacks/config/fuzzyflakes.xml
 hacks/config/galaxy.xml
 hacks/config/gears.xml
 hacks/config/geodesic.xml
+hacks/config/geodesicgears.xml
 hacks/config/gflux.xml
 hacks/config/glblur.xml
 hacks/config/glcells.xml
@@ -175,6 +178,7 @@ hacks/config/rd-bomb.xml
 hacks/config/rdbomb.xml
 hacks/config/ripples.xml
 hacks/config/rocks.xml
+hacks/config/romanboy.xml
 hacks/config/rorschach.xml
 hacks/config/rotor.xml
 hacks/config/rotzoomer.xml
@@ -192,6 +196,7 @@ hacks/config/speedmine.xml
 hacks/config/sphere.xml
 hacks/config/spheremonics.xml
 hacks/config/spiral.xml
+hacks/config/splitflap.xml
 hacks/config/spotlight.xml
 hacks/config/sproingies.xml
 hacks/config/squiral.xml
@@ -207,6 +212,7 @@ hacks/config/swirl.xml
 hacks/config/t3d.xml
 hacks/config/tangram.xml
 hacks/config/tessellimage.xml
+hacks/config/testx11.xml
 hacks/config/thornbird.xml
 hacks/config/timetunnel.xml
 hacks/config/topblock.xml

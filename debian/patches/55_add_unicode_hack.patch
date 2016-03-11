@@ -1,8 +1,8 @@
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
---- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:51:11.000000000 +0200
-+++ xscreensaver/driver/XScreenSaver.ad.in	2014-10-07 22:51:11.000000000 +0200
-@@ -195,6 +195,7 @@
+--- xscreensaver.orig/driver/XScreenSaver.ad.in	2015-07-19 11:29:42.000000000 +0200
++++ xscreensaver/driver/XScreenSaver.ad.in	2015-07-19 11:29:42.000000000 +0200
+@@ -196,6 +196,7 @@
  				goop -root				    \n\
  				grav -root				    \n\
  				ifs -root				    \n\

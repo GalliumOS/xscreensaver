@@ -1,21 +1,71 @@
-xscreensaver (5.30-1ubuntu1-galliumos3) vivid; urgency=medium
+xscreensaver (5.34-1ubuntu1-galliumos1) xenial; urgency=medium
 
-  * Fixed debian/patches/91_replace-gdmflexiserver.patch
+  * Changed the xscreensaver pam file to fix an issue with ecryptfs
+  * Changed the new login command for lxdm
 
- -- Hugh Greenberg <hugh@galliumos.org>  Wed, 10 Feb 2016 02:17:23 -0500
+ -- Hugh Greenberg <hugh@galliumos.org>  Thu, 10 Mar 2016 20:23:19 -0400
 
-xscreensaver (5.30-1ubuntu1-galliumos2) vivid; urgency=medium
+xscreensaver (5.34-1ubuntu1) xenial; urgency=medium
 
-  * Copied pam file from slim package to fix an issue with ecryptfs
+  * Merge from Debian unstable. Remaining changes: (LP: #1512136)
+    - debian/control:
+      + Breaks/Replaces: the old changes are not needed anymore, but the
+        new changes the screensavers sets needs it.
+    - debian/rules:
+      + Use /usr/share/backgrounds as image directory.
+      + Add translation domain to .desktop files.
+    - debian/source_xscreensaver.py:
+      + Add apport hook.
+    - debian/xscreensaver.dirs:
+      + Install /usr/share/backgrounds. By default, settings search in
+        /usr/share/backgrounds and without it, it displays an error.
+    - debian/patch/90_ubuntu-branding.patch: Use Ubuntu branding.
+    - debian/patches/60_sequential_glslideshow.patch:
+      + Allow going through images sequentially rather than just at random in
+        the GLSlideshow hack.
+  * Dropped changes, fixed in Debian:
+    - debian/patches/91_replace-gdmflexiserver.patch:
+      + Use dm-tool instead of gdmflexiserver for user-switching,
+        the latter is no longer provided by lightdm.
 
- -- Hugh Greenberg <hugh@galliumos.org>  Tue, 12 Jan 2016 02:17:23 -0500
+ -- Unit 193 <unit193@ubuntu.com>  Tue, 27 Oct 2015 20:23:19 -0400
 
-xscreensaver (5.30-1ubuntu1-galliumos1) vivid; urgency=medium
+xscreensaver (5.34-1) unstable; urgency=medium
 
-  * - debian/patches/91_replace-gdmflexiserver.patch:
-      + Use lxdm -c USER_SWITCH instead of gdmflexiserver for user-switching,
+  * New upstream release 5.34
+    - Fixed a crash when hot-swapping monitors while locked.
+      (Closes: #802914)
+    - Fixed some incorrect output from xscreensaver-command -watch.
 
- -- Hugh Greenberg <hugh@galliumos.org>  Fri, 25 Dec 2015 02:17:23 -0500
+ -- Tormod Volden <debian.tormod@gmail.com>  Sun, 25 Oct 2015 09:31:21 +0100
+
+xscreensaver (5.33-1) unstable; urgency=low
+
+  * New upstream release 5.33, changes since 5.30:
+    - New hacks, `geodesicgears', `binaryring', `cityflow', `splitflap'
+      and `romanboy'.
+    - UTF-8 text support (instead of only Latin1) and antialiased text
+      on X11 with Xft (instead of only on OSX/iOS) in `fontglide',
+      `noseguy', `fliptext', `starwars', and `winduprobot'.
+      The other text-displaying hacks (`apple2', `phosphor', `xmatrix',
+      and `gltext') also now accept UTF-8 input, though they convert it
+      to Latin1 or ASCII. (Closes: #180775)
+    - `glplanet' now has both day and night maps, and a sharp terminator.
+    - Fixed a transparency glitch in `winduprobot'.
+    - Better detection of user activity on modern GNOME systems.
+  * xscreensaver*.postrm/postinst/preinst: Remove obsolete parts used in
+    lenny->squeeze and potato->woody transitions
+  * Do not overwrite user-configured /etc/X11/app-defaults/XScreenSaver
+    Thanks to Bastien Roucariès for initial patch (Closes: #767019)
+  * Replace GNOME with MATE in desktop files stub (Closes: #766880, #774539)
+  * debian/copyright: Use unique short names for "other" licenses
+  * xscreensaver-wrapper.sh: Detect if launched from lightdm session
+    Thanks to Alexander Gerasiov for patch (Closes: #778470)
+  * debian/control: Recommend libgnomeui-0 package for xscreensaver-demo
+    Thanks to Michael Gilbert for patch (Closes: #661174)
+  * debian/rules: Hardcode app-defaults dir for configure
+
+ -- Tormod Volden <debian.tormod@gmail.com>  Tue, 28 Jul 2015 00:41:06 +0200
 
 xscreensaver (5.30-1ubuntu1) vivid; urgency=medium
 

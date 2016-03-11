@@ -1,5 +1,5 @@
 /*
- * fliptext, Copyright (c) 2005-2014 Jamie Zawinski <jwz@jwz.org>
+ * fliptext, Copyright (c) 2005-2015 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -14,22 +14,17 @@
 # include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-/* Utopia 800 needs 64 512x512 textures (4096x4096 bitmap).
-   Utopia 720 needs 16 512x512 textures (2048x2048 bitmap).
-   Utopia 480 needs 16 512x512 textures (2048x2048 bitmap).
-   Utopia 400 needs  4 512x512 textures (1024x1024 bitmap).
-   Utopia 180 needs  1 512x512 texture.
-   Times  240 needs  1 512x512 texture.
- */
-#define DEF_FONT       "-*-utopia-bold-r-normal-*-*-720-*-*-*-*-iso8859-1"
+#define DEF_FONT       "-*-utopia-bold-r-normal-*-*-720-*-*-*-*-*-*"
 #define DEF_COLOR      "#00CCFF"
 
 #define DEFAULTS "*delay:        10000      \n" \
 		 "*showFPS:      False      \n" \
 		 "*wireframe:    False      \n" \
 		 "*usePty:       False      \n" \
+		 "*texFontCacheSize: 60     \n" \
 		 "*font:       " DEF_FONT  "\n" \
 		 ".foreground: " DEF_COLOR "\n" \
+		 "*program: xscreensaver-text --cols 0"  /* don't wrap */
 
 # define refresh_fliptext 0
 # define fliptext_handle_event 0
@@ -54,7 +49,6 @@
 # endif
 
 
-#define DEF_PROGRAM    "xscreensaver-text --cols 0"  /* don't wrap */
 #define DEF_LINES      "8"
 #define DEF_FONT_SIZE  "20"
 #define DEF_COLUMNS    "80"
@@ -120,7 +114,6 @@ typedef struct {
 
 static fliptext_configuration *scs = NULL;
 
-static char *program;
 static int max_lines, min_lines;
 static float font_size;
 static int target_columns;
@@ -129,7 +122,6 @@ static int alignment, alignment_random_p;
 static GLfloat speed;
 
 static XrmOptionDescRec opts[] = {
-  {"-program",     ".program",   XrmoptionSepArg, 0 },
   {"-lines",       ".lines",     XrmoptionSepArg, 0 },
   {"-size",	   ".fontSize",  XrmoptionSepArg, 0 },
   {"-columns",	   ".columns",   XrmoptionSepArg, 0 },
@@ -142,7 +134,6 @@ static XrmOptionDescRec opts[] = {
 };
 
 static argtype vars[] = {
-  {&program,        "program",   "Program",    DEF_PROGRAM,   t_String},
   {&max_lines,      "lines",     "Integer",    DEF_LINES,     t_Int},
   {&font_size,      "fontSize",  "Float",      DEF_FONT_SIZE, t_Float},
   {&target_columns, "columns",   "Integer",    DEF_COLUMNS,   t_Int},
@@ -218,10 +209,12 @@ strip (char *s, Bool leading, Bool trailing)
 static int
 char_width (fliptext_configuration *sc, char c)
 {
+  XCharStruct e;
   char s[2];
   s[0] = c;
   s[1] = 0;
-  return texture_string_width (sc->texfont, s, 0);
+  texture_string_metrics (sc->texfont, s, &e, 0, 0);
+  return e.width;
 }
 
 
@@ -358,6 +351,7 @@ blank_p (const char *s)
 static line *
 make_line (fliptext_configuration *sc, Bool skip_blanks_p)
 {
+  XCharStruct e;
   line *ln;
   char *s;
 
@@ -374,7 +368,8 @@ make_line (fliptext_configuration *sc, Bool skip_blanks_p)
   ln = (line *) calloc (1, sizeof(*ln));
   ln->text = s;
   ln->state = NEW;
-  ln->width = sc->font_scale * texture_string_width (sc->texfont, s, 0);
+  texture_string_metrics (sc->texfont, s, &e, 0, 0);
+  ln->width = sc->font_scale * e.width;
   ln->height = sc->font_scale * sc->line_height;
 
   memcpy (ln->color, sc->color, sizeof(ln->color));
@@ -454,8 +449,11 @@ draw_line (ModeInfo *mi, line *line)
       glColor3f (0.4, 0.4, 0.4);
       while (*s)
         {
+          XCharStruct e;
           *c = *s++;
-          w = texture_string_width (sc->texfont, c, &h);
+          texture_string_metrics (sc->texfont, c, &e, 0, 0);
+          w = e.width;
+          h = e.ascent + e.descent;
           glBegin (GL_LINE_LOOP);
           glVertex3f (0, 0, 0);
           glVertex3f (w, 0, 0);
@@ -814,13 +812,14 @@ init_fliptext (ModeInfo *mi)
     clear_gl_error(); /* WTF? sometimes "invalid op" from glViewport! */
   }
 
-  program = get_string_resource (mi->dpy, "program", "Program");
-
   {
-    int cw, lh;
+    XCharStruct e;
+    int cw, lh, ascent, descent;
     sc->texfont = load_texture_font (MI_DISPLAY(mi), "font");
     check_gl_error ("loading font");
-    cw = texture_string_width (sc->texfont, "n", &lh);
+    texture_string_metrics (sc->texfont, "n", &e, &ascent, &descent);
+    cw = e.width;
+    lh = ascent + descent;
     sc->char_width = cw;
     sc->line_height = lh;
   }

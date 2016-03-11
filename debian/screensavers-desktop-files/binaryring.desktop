@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=BinaryRing
+Exec=/usr/lib/xscreensaver/binaryring -root
+TryExec=/usr/lib/xscreensaver/binaryring
+Comment=A system of path tracing particles evolves continuously from an initial creation, alternating dark and light colors. Written by J. Tarbell and Emilio Del Tessandoro.

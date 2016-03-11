@@ -1,4 +1,4 @@
-/* xscreensaver, Copyright (c) 2006-2013 Jamie Zawinski <jwz@jwz.org>
+/* xscreensaver, Copyright (c) 2006-2014 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -149,6 +149,48 @@ typedef enum { SimpleXMLCommentKind,
 @end
 
 
+#pragma mark textMode value transformer
+
+// A value transformer for mapping "url" to "3" and vice versa in the
+// "textMode" preference, since NSMatrix uses NSInteger selectedIndex.
+
+#ifndef USE_IPHONE
+@interface TextModeTransformer: NSValueTransformer {}
+@end
+@implementation TextModeTransformer
++ (Class)transformedValueClass { return [NSString class]; }
++ (BOOL)allowsReverseTransformation { return YES; }
+
+- (id)transformedValue:(id)value {
+  if ([value isKindOfClass:[NSString class]]) {
+    int i = -1;
+    if      ([value isEqualToString:@"date"])    { i = 0; }
+    else if ([value isEqualToString:@"literal"]) { i = 1; }
+    else if ([value isEqualToString:@"file"])    { i = 2; }
+    else if ([value isEqualToString:@"url"])     { i = 3; }
+    else if ([value isEqualToString:@"program"]) { i = 4; }
+    if (i != -1)
+      value = [NSNumber numberWithInt: i];
+  }
+  return value;
+}
+
+- (id)reverseTransformedValue:(id)value {
+  if ([value isKindOfClass:[NSNumber class]]) {
+    switch ((int) [value doubleValue]) {
+    case 0: value = @"date";    break;
+    case 1: value = @"literal"; break;
+    case 2: value = @"file";    break;
+    case 3: value = @"url";     break;
+    case 4: value = @"program"; break;
+    }
+  }
+  return value;
+}
+@end
+#endif // USE_IPHONE
+
+
 #pragma mark Implementing radio buttons
 
 /* The UIPickerView is a hideous and uncustomizable piece of shit.
@@ -228,10 +270,13 @@ typedef enum { SimpleXMLCommentKind,
   webView = [[UIWebView alloc] init];
   webView.delegate = self;
   webView.dataDetectorTypes = UIDataDetectorTypeNone;
-  self.   autoresizingMask = (UIViewAutoresizingFlexibleWidth |
-                              UIViewAutoresizingFlexibleHeight);
-  webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
-                              UIViewAutoresizingFlexibleHeight);
+  self.   autoresizingMask = UIViewAutoresizingNone;  // we do it manually
+  webView.autoresizingMask = UIViewAutoresizingNone;
+  webView.scrollView.scrollEnabled = NO; 
+  webView.scrollView.bounces = NO;
+  webView.opaque = NO;
+  [webView setBackgroundColor:[UIColor clearColor]];
+
   [self addSubview: webView];
   [self setHTML: h];
   return self;
@@ -270,6 +315,7 @@ typedef enum { SimpleXMLCommentKind,
                       " font-family: \"%@\";"
                       " font-size: %.4fpx;"	// Must be "px", not "pt"!
                       " line-height: %.4fpx;"   // And no spaces before it.
+                      " -webkit-text-size-adjust: none;"
                       "}"
                     "\n//-->\n"
                    "</STYLE>"
@@ -282,6 +328,7 @@ typedef enum { SimpleXMLCommentKind,
               [font pointSize],
               [font lineHeight],
               h];
+  [webView stopLoading];
   [webView loadHTMLString:h2 baseURL:[NSURL URLWithString:@""]];
 }
 
@@ -290,6 +337,8 @@ static char *anchorize (const char *url);
 
 - (void) setText: (NSString *)t
 {
+  t = [t stringByTrimmingCharactersInSet:[NSCharacterSet
+                                           whitespaceCharacterSet]];
   t = [t stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
   t = [t stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
   t = [t stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
@@ -313,6 +362,12 @@ static char *anchorize (const char *url);
     }
     h = [NSString stringWithFormat: @"%@ %@", h, s];
   }
+
+  h = [h stringByReplacingOccurrencesOfString:@" <P> " withString:@"<P>"];
+  h = [h stringByReplacingOccurrencesOfString:@"<BR><P>" withString:@"<P>"];
+  h = [h stringByTrimmingCharactersInSet:[NSCharacterSet
+                                           whitespaceAndNewlineCharacterSet]];
+
   [self setHTML: h];
 }
 
@@ -336,8 +391,6 @@ static char *anchorize (const char *url);
   r.origin.x = 0;
   r.origin.y = 0;
   [webView setFrame: r];
-  [self setHTML: html];
-  [webView reload];
 }
 
 
@@ -345,6 +398,7 @@ static char *anchorize (const char *url);
 {
   NSString *result = @"";
 
+  // Add newlines.
   str = [str stringByReplacingOccurrencesOfString:@"<P>"
              withString:@"<BR><BR>"
              options:NSCaseInsensitiveSearch
@@ -354,12 +408,25 @@ static char *anchorize (const char *url);
              options:NSCaseInsensitiveSearch
              range:NSMakeRange(0, [str length])];
 
+  // Remove HREFs.
   for (NSString *s in [str componentsSeparatedByString: @"<"]) {
     NSRange r = [s rangeOfString:@">"];
     if (r.length > 0)
       s = [s substringFromIndex: r.location + r.length];
     result = [result stringByAppendingString: s];
   }
+
+  // Compress internal horizontal whitespace.
+  str = result;
+  result = @"";
+  for (NSString *s in [str componentsSeparatedByCharactersInSet:
+                             [NSCharacterSet whitespaceCharacterSet]]) {
+    if ([result length] == 0)
+      result = s;
+    else if ([s length] > 0)
+      result = [NSString stringWithFormat: @"%@ %@", result, s];
+  }
+
   return result;
 }
 
@@ -370,8 +437,15 @@ static char *anchorize (const char *url);
 
   /* It would be sensible to just ask the UIWebView how tall the page is,
      instead of hoping that NSString and UIWebView measure fonts and do
-     wrapping in exactly the same way, but I can't make that work.
-     Maybe because it loads async?
+     wrapping in exactly the same way, but since UIWebView is asynchronous,
+     we'd have to wait for the document to load first, e.g.:
+
+       - Start the document loading;
+       - return a default height to use for the UITableViewCell;
+       - wait for the webViewDidFinishLoad delegate method to fire;
+       - then force the UITableView to reload, to pick up the new height.
+
+     But I couldn't make that work.
    */
 # if 0
   r.size.height = [[webView
@@ -385,11 +459,6 @@ static char *anchorize (const char *url);
   s = [text sizeWithFont: font
             constrainedToSize: s
             lineBreakMode:NSLineBreakByWordWrapping];
-
-  // GAAAH. Add one more line, or the UIWebView is still scrollable!
-  // The text is sized right, but it lets you scroll it up anyway.
-  s.height += [font pointSize];
-
   r.size.height = s.height;
 # endif
 
@@ -639,6 +708,11 @@ static void layout_group (NSView *group, BOOL horiz_p);
 
 - (void) okAction:(NSObject *)arg
 {
+  // Without the setAppliesImmediately:, when the saver restarts, it's still
+  // got the old settings. -[XScreenSaverConfigSheet traverseTree] sets this
+  // to NO; default is YES.
+  [userDefaultsController   setAppliesImmediately:YES];
+  [globalDefaultsController setAppliesImmediately:YES];
   [userDefaultsController   commitEditing];
   [globalDefaultsController commitEditing];
   [userDefaultsController   save:self];
@@ -686,15 +760,23 @@ static void layout_group (NSView *group, BOOL horiz_p);
 {
   NSUserDefaultsController *prefs = [self controllerForKey:pref_key];
 # ifndef USE_IPHONE
+  NSDictionary *opts_dict = nil;
   NSString *bindto = ([control isKindOfClass:[NSPopUpButton class]]
                       ? @"selectedObject"
                       : ([control isKindOfClass:[NSMatrix class]]
                          ? @"selectedIndex"
                          : @"value"));
+
+  if ([control isKindOfClass:[NSMatrix class]]) {
+    opts_dict = @{ NSValueTransformerNameBindingOption:
+                   @"TextModeTransformer" };
+  }
+
   [control bind:bindto
        toObject:prefs
     withKeyPath:[@"values." stringByAppendingString: pref_key]
-        options:nil];
+        options:opts_dict];
+
 # else  // USE_IPHONE
   SEL sel;
   NSObject *val = [prefs objectForKey:pref_key];
@@ -765,9 +847,17 @@ static void layout_group (NSView *group, BOOL horiz_p);
   NSObject *def = [[prefs defaults] objectForKey:pref_key];
   NSString *s = [NSString stringWithFormat:@"bind: \"%@\"", pref_key];
   s = [s stringByPaddingToLength:18 withString:@" " startingAtIndex:0];
-  s = [NSString stringWithFormat:@"%@ = \"%@\"", s, def];
-  s = [s stringByPaddingToLength:28 withString:@" " startingAtIndex:0];
-  NSLog (@"%@ %@/%@", s, [def class], [control class]);
+  s = [NSString stringWithFormat:@"%@ = %@", s, 
+                ([def isKindOfClass:[NSString class]]
+                 ? [NSString stringWithFormat:@"\"%@\"", def]
+                 : def)];
+  s = [s stringByPaddingToLength:30 withString:@" " startingAtIndex:0];
+  s = [NSString stringWithFormat:@"%@ %@ / %@", s,
+                [def class], [control class]];
+#  ifndef USE_IPHONE
+  s = [NSString stringWithFormat:@"%@ / %@", s, bindto];
+#  endif
+  NSLog (@"%@", s);
 # endif
 }
 
@@ -1329,6 +1419,8 @@ hreffify (NSText *nstext)
       [self placeChild:lab on:parent];
 # else  // USE_IPHONE
       [lab setTextAlignment: NSTextAlignmentRight];
+      // Sometimes rotation screws up truncation.
+      [lab setLineBreakMode:NSLineBreakByClipping];
       [self placeChild:lab on:parent right:(label ? YES : NO)];
 # endif // USE_IPHONE
 
@@ -1363,6 +1455,10 @@ hreffify (NSText *nstext)
       // Make right label be same height as slider.
       rect.size.height = [slider frame].size.height;
       [lab setFrame:rect];
+# ifdef USE_IPHONE
+      // Sometimes rotation screws up truncation.
+      [lab setLineBreakMode:NSLineBreakByClipping];
+# endif
       [self placeChild:lab on:parent right:YES];
       [lab release];
      }
@@ -1677,7 +1773,7 @@ set_menu_item_object (NSMenuItem *item, NSObject *obj)
   // Store the items for this picker in the picker_values array.
   // This is so fucking stupid.
 
-  int menu_number = [pref_keys count] - 1;
+  unsigned long menu_number = [pref_keys count] - 1;
   if (! picker_values)
     picker_values = [[NSMutableArray arrayWithCapacity:menu_number] retain];
   while ([picker_values count] <= menu_number)
@@ -2488,7 +2584,25 @@ last_child (NSView *parent)
 
 # else // USE_IPHONE
 
-  // Controls is an array of arrays of the controls, divided into sections.
+  /* Controls is an array of arrays of the controls, divided into sections.
+     Each hgroup / vgroup gets a nested array, too, e.g.:
+
+       [ [ [ <label>, <checkbox> ],
+           [ <label>, <checkbox> ],
+           [ <label>, <checkbox> ] ],
+         [ <label>, <text-field> ],
+         [ <label>, <low-label>, <slider>, <high-label> ],
+         [ <low-label>, <slider>, <high-label> ],
+         <HTML-label>
+       ];
+
+     If an element begins with a label, it is terminal, otherwise it is a
+     group.  There are (currently) never more than 4 elements in a single
+     terminal element.
+
+     A blank vertical spacer is placed between each hgroup / vgroup,
+     by making each of those a new section in the TableView.
+   */
   if (! controls)
     controls = [[NSMutableArray arrayWithCapacity:10] retain];
   if ([controls count] == 0)
@@ -2506,7 +2620,7 @@ last_child (NSView *parent)
       NSAssert ([(NSArray *) old count] < 4, @"internal error");
       [(NSMutableArray *) old addObject: child];
     } else {
-      // Replace the control in this cell with an array, then app
+      // Replace the control in this cell with an array, then append
       NSMutableArray *a = [NSMutableArray arrayWithObjects: old, child, nil];
       [current replaceObjectAtIndex:[current count]-1 withObject:a];
     }
@@ -2648,6 +2762,9 @@ layout_group (NSView *group, BOOL horiz_p)
 
   } else if ([name isEqualToString:@"command"]) {
     // do nothing: this is the "-root" business
+
+  } else if ([name isEqualToString:@"video"]) {
+    // ignored
 
   } else if ([name isEqualToString:@"boolean"]) {
     [self makeCheckbox:node on:parent];
@@ -3170,7 +3287,7 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
 - (CGFloat)tableView:(UITableView *)tv
            heightForRowAtIndexPath:(NSIndexPath *)ip
 {
-  CGFloat h = [tv rowHeight];
+  CGFloat h = 0;
 
   NSView *ctl = [[controls objectAtIndex:[ip indexAtPosition:0]]
                   objectAtIndex:[ip indexAtPosition:1]];
@@ -3178,27 +3295,19 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
   if ([ctl isKindOfClass:[NSArray class]]) {
     NSArray *set = (NSArray *) ctl;
     switch ([set count]) {
-    case 4:
-# ifdef LABEL_ABOVE_SLIDER
-      h *= 1.7; break;	// label + left/slider/right: 2 1/2 lines
-# endif
-    case 3: h *= 1.2; break;	// left/slider/right: 1 1/2 lines
-    case 2:
-      if ([[set objectAtIndex:1] isKindOfClass:[UITextField class]])
-        h *= 1.2;
+    case 4:			// label + left/slider/right.
+    case 3:			// left/slider/right.
+      h = FONT_SIZE * 3.0;
+      break;
+    case 2:			// Checkboxes, or text fields.
+      h = FONT_SIZE * 2.4;
       break;
     }
   } else if ([ctl isKindOfClass:[UILabel class]]) {
-    UILabel *t = (UILabel *) ctl;
-    CGRect r = t.frame;
-    r.size.width = 250;		// WTF! Black magic!
-    r.size.width -= LEFT_MARGIN;
-    [t setFrame:r];
-    [t sizeToFit];
-    r = t.frame;
-    h = r.size.height + LINE_SPACING * 3;
-# ifdef USE_HTML_LABELS
+    // Radio buttons in a multi-select list.
+    h = FONT_SIZE * 1.9;
 
+# ifdef USE_HTML_LABELS
   } else if ([ctl isKindOfClass:[HTMLLabel class]]) {
     
     HTMLLabel *t = (HTMLLabel *) ctl;
@@ -3208,15 +3317,14 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
     [t setFrame:r];
     [t sizeToFit];
     r = t.frame;
-    h = r.size.height + LINE_SPACING * 3;
-
+    h = r.size.height;
 # endif // USE_HTML_LABELS
-  } else {
-    CGFloat h2 = [ctl frame].size.height;
-    h2 += LINE_SPACING * 2;
-    if (h2 > h) h = h2;
+
+  } else {			// Does this ever happen?
+    h = FONT_SIZE + LINE_SPACING * 2;
   }
 
+  if (h <= 0) abort();
   return h;
 }
 
@@ -3239,6 +3347,11 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
   [tv beginUpdates];
   [tv reloadRowsAtIndexPaths:a withRowAnimation:UITableViewRowAnimationNone];
   [tv endUpdates];
+
+  // Default opacity looks bad.
+  // #### Oh great, this only works *sometimes*.
+  UIView *v = [[self navigationItem] titleView];
+  [v setBackgroundColor:[[v backgroundColor] colorWithAlphaComponent:1]];
 }
 
 
@@ -3304,46 +3417,23 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
 - (UITableViewCell *)tableView:(UITableView *)tv
                      cellForRowAtIndexPath:(NSIndexPath *)ip
 {
-#if 0
-  /* #### If we re-use cells, then clicking on a checkbox RadioButton
-          (in non-USE_PICKER_VIEW mode) makes all the cells disappear.
-          This doesn't happen if we don't re-use any cells. Oh well.
-   */
-  NSString *id = [NSString stringWithFormat: @"%d:%d",
-                           [ip indexAtPosition:0],
-                           [ip indexAtPosition:1]];
-  UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier: id];
-
-  if (cell) return cell;
-#else
-  NSString *id = nil;
-  UITableViewCell *cell;
-#endif
-
-  cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
-                                   reuseIdentifier: id]
-           autorelease];
-  cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-  CGRect p = [cell frame];
-  CGRect r;
-
-  p.size.height = [self tableView:tv heightForRowAtIndexPath:ip];
-  [cell setFrame:p];
-
-  // Allocate more space to the controls on iPad screens,
-  // and on landscape-mode iPhones.
   CGFloat ww = [tv frame].size.width;
-  CGFloat left_edge = (ww > 700
-                       ? p.size.width * 0.9
-                       : ww > 320
-                       ? p.size.width * 0.5
-                       : p.size.width * 0.3);
-  CGFloat right_edge = p.origin.x + p.size.width - LEFT_MARGIN;
+  CGFloat hh = [self tableView:tv heightForRowAtIndexPath:ip];
 
+  float os_version = [[[UIDevice currentDevice] systemVersion] floatValue];
+
+  // Width of the column of labels on the left.
+  CGFloat left_width = ww * 0.4;
+  CGFloat right_edge = ww - LEFT_MARGIN;
+
+  if (os_version < 7)  // margins were wider on iOS 6.1
+    right_edge -= 10;
+
+  CGFloat max = FONT_SIZE * 12;
+  if (left_width > max) left_width = max;
 
   NSView *ctl = [[controls objectAtIndex:[ip indexAtPosition:0]]
-                  objectAtIndex:[ip indexAtPosition:1]];
+                           objectAtIndex:[ip indexAtPosition:1]];
 
   if ([ctl isKindOfClass:[NSArray class]]) {
     // This cell has a set of objects in it.
@@ -3356,35 +3446,39 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
         NSAssert ([label isKindOfClass:[UILabel class]], @"unhandled type");
         ctl = [set objectAtIndex: 1];
 
-        r = [ctl frame];
-        if ([ctl isKindOfClass:[UISwitch class]]) {
-          // Flush right checkboxes.
-          ctl.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        CGRect r = [ctl frame];
+
+        if ([ctl isKindOfClass:[UISwitch class]]) {	// Checkboxes.
           r.size.width = 80;  // Magic.
-          r.origin.x = right_edge - r.size.width;
+          r.origin.x = right_edge - r.size.width + 30;  // beats me
+
+          if (os_version < 7)  // checkboxes were wider on iOS 6.1
+            r.origin.x -= 25;
+
         } else {
-          // Expandable sliders.
-          ctl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-          r.origin.x = left_edge;
+          r.origin.x = left_width;			// Text fields, etc.
           r.size.width = right_edge - r.origin.x;
         }
-        r.origin.y = (p.size.height - r.size.height) / 2;
+
+        r.origin.y = (hh - r.size.height) / 2;   // Center vertically.
         [ctl setFrame:r];
 
-        // Make a box.
-        NSView *box = [[UIView alloc] initWithFrame:p];
+        // Make a box and put the label and checkbox/slider into it.
+        r.origin.x = 0;
+        r.origin.y = 0;
+        r.size.width  = ww;
+        r.size.height = hh;
+        NSView *box = [[UIView alloc] initWithFrame:r];
         [box addSubview: ctl];
 
-        // cell.textLabel.text = [(UILabel *) ctl text];
+        // Let the label make use of any space not taken up by the control.
         r = [label frame];
         r.origin.x = LEFT_MARGIN;
         r.origin.y = 0;
         r.size.width  = [ctl frame].origin.x - r.origin.x;
-        r.size.height = p.size.height;
+        r.size.height = hh;
         [label setFrame:r];
         [label setFont:[NSFont boldSystemFontOfSize: FONT_SIZE]];
-        label.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-        box.  autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [box addSubview: label];
 
         ctl = box;
@@ -3393,8 +3487,8 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
     case 3:
     case 4:
       {
-        // With 3 elements, the first and last must be labels.
-        // With 4 elements, the first, second and last must be labels.
+        // With 3 elements, 1 and 3 are labels.
+        // With 4 elements, 1, 2 and 4 are labels.
         int i = 0;
         UILabel *top  = ([set count] == 4
                          ? [set objectAtIndex: i++]
@@ -3409,108 +3503,106 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
 
         // 3 elements: control at top of cell.
         // 4 elements: center the control vertically.
-        r = [mid frame];
+        CGRect r = [mid frame];
+        r.size.height = 32;   // Unchangable height of the slider thumb.
+
+        // Center the slider between left_width and right_edge.
 # ifdef  LABEL_ABOVE_SLIDER
-        left_edge = LEFT_MARGIN;
+        r.origin.x = LEFT_MARGIN;
+# else
+        r.origin.x = left_width;
 # endif
-        r.origin.x = left_edge;
+        r.origin.y = (hh - r.size.height) / 2;
         r.size.width = right_edge - r.origin.x;
-        r.origin.y = ([set count] == 3
-                      ? 8
-                      : (p.size.height - r.size.height) / 2);
         [mid setFrame:r];
 
-        // Top label goes above, flush center/top.
         if (top) {
           r.size = [[top text] sizeWithFont:[top font]
                                constrainedToSize:
-                                 CGSizeMake (p.size.width - LEFT_MARGIN*2,
-                                             100000)
+                                 CGSizeMake (ww - LEFT_MARGIN*2, 100000)
                                lineBreakMode:[top lineBreakMode]];
-          r.origin.x = (p.size.width - r.size.width) / 2;
+# ifdef LABEL_ABOVE_SLIDER
+          // Top label goes above, flush center/top.
+          r.origin.x = (ww - r.size.width) / 2;
           r.origin.y = 4;
+# else  // !LABEL_ABOVE_SLIDER
+          // Label goes on the left.
+          r.origin.x = LEFT_MARGIN;
+          r.origin.y = 0;
+          r.size.width  = left_width - LEFT_MARGIN;
+          r.size.height = hh;
+# endif // !LABEL_ABOVE_SLIDER
           [top setFrame:r];
         }
 
         // Left label goes under control, flush left/bottom.
         r.size = [[left text] sizeWithFont:[left font]
-                               constrainedToSize:
-                                 CGSizeMake(p.size.width - LEFT_MARGIN*2,
-                                            100000)
+                              constrainedToSize:
+                                CGSizeMake(ww - LEFT_MARGIN*2, 100000)
                               lineBreakMode:[left lineBreakMode]];
         r.origin.x = [mid frame].origin.x;
-        r.origin.y = p.size.height - r.size.height - 4;
+        r.origin.y = hh - r.size.height - 4;
         [left setFrame:r];
 
         // Right label goes under control, flush right/bottom.
         r = [right frame];
         r.size = [[right text] sizeWithFont:[right font]
                                constrainedToSize:
-                                 CGSizeMake(p.size.width - LEFT_MARGIN*2,
-                                            1000000)
+                                 CGSizeMake(ww - LEFT_MARGIN*2, 1000000)
                                lineBreakMode:[right lineBreakMode]];
         r.origin.x = ([mid frame].origin.x + [mid frame].size.width -
                       r.size.width);
         r.origin.y = [left frame].origin.y;
         [right setFrame:r];
 
-        // Then make a box.
-        ctl = [[UIView alloc] initWithFrame:p];
-        if (top) {
-# ifdef LABEL_ABOVE_SLIDER
-          [ctl addSubview: top];
-          top.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin|
-                                  UIViewAutoresizingFlexibleRightMargin);
-# else
-          r = [top frame];
-          r.origin.x = LEFT_MARGIN;
-          r.origin.y = 0;
-          r.size.width  = [mid frame].origin.x - r.origin.x;
-          r.size.height = p.size.height;
-          [top setFrame:r];
-          top.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-          [ctl addSubview: top];
-# endif
-        }
-        [ctl addSubview: left];
-        [ctl addSubview: mid];
-        [ctl addSubview: right];
+        // Make a box and put the labels and slider into it.
+        r.origin.x = 0;
+        r.origin.y = 0;
+        r.size.width  = ww;
+        r.size.height = hh;
+        NSView *box = [[UIView alloc] initWithFrame:r];
+        if (top)
+          [box addSubview: top];
+        [box addSubview: left];
+        [box addSubview: right];
+        [box addSubview: mid];
 
-        left. autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-        mid.  autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        right.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        ctl.  autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        ctl = box;
       }
       break;
     default:
       NSAssert (0, @"unhandled size");
     }
-  } else {
-    // A single view, not a pair.
-
-    r = [ctl frame];
+  } else {	// A single view, not a pair.
+    CGRect r = [ctl frame];
     r.origin.x = LEFT_MARGIN;
-    r.origin.y = LINE_SPACING;
+    r.origin.y = 0;
     r.size.width = right_edge - r.origin.x;
+    r.size.height = hh;
     [ctl setFrame:r];
+  }
 
-    ctl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+  NSString *id = @"Cell";
+  UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:id];
+  if (!cell)
+    cell = [[[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault
+                                     reuseIdentifier: id]
+             autorelease];
+
+  for (UIView *subview in [cell.contentView subviews])
+    [subview removeFromSuperview];
+  [cell.contentView addSubview: ctl];
+  CGRect r = [ctl frame];
+  r.origin.x = 0;
+  r.origin.y = 0;
+  [cell setFrame:r];
+  cell.selectionStyle = UITableViewCellSelectionStyleNone;
+  [cell setAccessoryType:UITableViewCellAccessoryNone];
 
 # ifndef USE_PICKER_VIEW
-    if ([ctl isKindOfClass:[RadioButton class]])
-      [self updateRadioGroupCell:cell button:(RadioButton *)ctl];
+  if ([ctl isKindOfClass:[RadioButton class]])
+    [self updateRadioGroupCell:cell button:(RadioButton *)ctl];
 # endif // USE_PICKER_VIEW
-  }
-
-  if ([ctl isKindOfClass:[UILabel class]]) {
-    // Make label full height to allow text to line-wrap if necessary.
-    r = [ctl frame];
-    r.origin.y = p.origin.y;
-    r.size.height = p.size.height;
-    [ctl setFrame:r];
-  }
-
-  [cell.contentView addSubview: ctl];
 
   return cell;
 }
@@ -3558,6 +3650,12 @@ wrap_with_buttons (NSWindow *window, NSView *panel)
                err);
     return nil;
   }
+
+# ifndef USE_IPHONE
+  TextModeTransformer *t = [[TextModeTransformer alloc] init];
+  [NSValueTransformer setValueTransformer:t
+                      forName:@"TextModeTransformer"];
+# endif // USE_IPHONE
 
   [self traverseTree];
   xml_root = 0;

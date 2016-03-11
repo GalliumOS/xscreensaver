@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=qpnuNJH9cLw"/>
+
   <number id="delay" type="slider" arg="-delay %"
           _label="Frame rate" _low-label="Low" _high-label="High"
           low="0" high="100000" default="30000"
@@ -41,8 +43,8 @@
 The Menger Gasket is a cube-based recursive fractal object
 analagous to the Sierpinski Tetrahedron.
 
-http://en.wikipedia.org/wiki/Menger_sponge
-http://en.wikipedia.org/wiki/Sierpinski_carpet
+https://en.wikipedia.org/wiki/Menger_sponge
+https://en.wikipedia.org/wiki/Sierpinski_carpet
 
 Written by Jamie Zawinski; 2001.
   </_description>

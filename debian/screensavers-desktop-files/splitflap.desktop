@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=SplitFlap
+Exec=/usr/lib/xscreensaver/splitflap -root
+TryExec=/usr/lib/xscreensaver/splitflap
+Comment=Simulates a split-flap display, an old style of electromechanical sign as seen in airports and train stations, and commonly used in alarm clocks in the 1960s and 1970s. https://en.wikipedia.org/wiki/Split-flap_display https://en.wikipedia.org/wiki/Flip_clock Written by Jamie Zawinski.

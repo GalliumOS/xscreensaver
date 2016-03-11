@@ -22,7 +22,7 @@ all: debug release
 
 clean:
 	-rm -rf build
-#	cd ..; $(XCODEBUILD) -target "$(TARGETS)" clean
+#	$(XCODEBUILD) -target "$(TARGETS)" clean
 
 distclean:
 	-rm -f config.status config.cache config.log \
@@ -34,10 +34,10 @@ distdepend:: Sparkle.framework
 distdepend:: update_plist_version
 
 debug: distdepend
-	cd ..; $(XCODEBUILD) $(ARCH) -target "$(TARGETS)" -configuration Debug   build
+	$(XCODEBUILD) $(ARCH) -target "$(TARGETS)" -configuration Debug   build
 
 release:: distdepend
-	cd ..; $(XCODEBUILD) $(ARCH) -target "$(TARGETS)" -configuration Release build
+	$(XCODEBUILD) $(ARCH) -target "$(TARGETS)" -configuration Release build
 
 release:: check_versions
 release:: update_thumbs
@@ -88,6 +88,19 @@ check_gc:
      RESULT=1 ;								\
    fi ;									\
   done ;								\
+									\
+  for D in "$$DIR"/webcollage-helper					\
+	   "$$DIR"/*.saver/Contents/*/webcollage-helper			\
+	   "$$DIR"/*.app/Contents/*/XScreenSaverUpdater			\
+   ; do									\
+   V=`otool -s __DATA __objc_imageinfo "$$D"				\
+      | grep ' 00 02 00 '` ;						\
+   if [ ! -z "$$V" ]; then						\
+     echo "$$D has GC enabled" ;					\
+     RESULT=1 ;								\
+   fi ;									\
+  done ;								\
+									\
   if [ "$$RESULT" = 0 ]; then echo "GC enabled" ; fi ;			\
   exit $$RESULT
 
@@ -128,12 +141,14 @@ ios-function-table.m::
 
 
 echo_tarfiles:
-	@echo `find . \
-	  \( \( -name '.??*' -o -name build -o -name CVS -o -name '*~*' \
-	     -o -name 'jwz.*' -o -name 'Screen Savers' \) \
-	     -prune \) \
-	  -o \( -type f -o -type l \) -print \
-	| sed 's@^\./@@' \
+	@echo `( find .							\
+	  \( \( -name '.??*' -o -name build -o -name CVS -o -name '*~*'	\
+	     -o -name 'jwz.*' -o -name 'Screen Savers'			\
+             -o -name xscreensaver.xcodeproj \)				\
+	     -prune \)							\
+	  -o \( -type f -o -type l \) -print ;				\
+	  echo xscreensaver.xcodeproj/project.pbxproj )			\
+	| sed 's@^\./@@'						\
 	| sort`
 
 update_plist_version:
@@ -259,6 +274,7 @@ dmg::
    for r in $$retired ; do						      \
     if [ "$$ff" = "$$r" ]; then ok=no ; fi ;				      \
    done ;								      \
+   if [ "$$ff" = testx11 ]; then ok=no ; fi ;				      \
    if [ "$$f2" = "XScreenSaverUpdater.app" ]; then			      \
     DST_HACK="XScreenSaver.updater" ;					      \
     echo + tar ... "$$DST/$$DST_HACK" ;					      \
@@ -351,3 +367,8 @@ reset_prefs::
 	$$W2 "$$domain.XMatrix" matrixFont small ;			      \
 	$$W2 "$$domain.XMatrix" textMode literal ;			      \
 	$$W2 "$$domain.XMatrix" textLiteral "MONKEY BUTTER" ;		      \
+
+# defaults -currentHost write org.jwz.xscreensaver.FontGlide debugMetrics -bool true
+# defaults -currentHost write org.jwz.xscreensaver.StarWars debug -bool true
+# defaults -currentHost write org.jwz.xscreensaver.StarWars textMode file
+# defaults -currentHost write org.jwz.xscreensaver.StarWars textFile ~/src/xscreensaver/hacks/glx/zalgo.txt

@@ -74,9 +74,9 @@ typedef long PROP32;
 extern int kill (pid_t, int);		/* signal() is in sys/signal.h... */
 
 Atom XA_VROOT, XA_XSETROOT_ID, XA_ESETROOT_PMAP_ID, XA_XROOTPMAP_ID;
+Atom XA_NET_WM_USER_TIME;
 Atom XA_SCREENSAVER, XA_SCREENSAVER_VERSION, XA_SCREENSAVER_ID;
 Atom XA_SCREENSAVER_STATUS;
-
 
 extern saver_info *global_si_kludge;	/* I hate C so much... */
 
@@ -1008,7 +1008,7 @@ store_saver_status (saver_info *si)
 
   status = (PROP32 *) calloc (size, sizeof(PROP32));
 
-  status[0] = (PROP32) (si->screen_blanked_p
+  status[0] = (PROP32) (si->screen_blanked_p || si->locked_p
                         ? (si->locked_p ? XA_LOCK : XA_BLANK)
                         : 0);
   status[1] = (PROP32) si->blank_time;
@@ -1681,7 +1681,7 @@ blank_screen (saver_info *si)
   raise_window (si, False, False, False);
 
   si->screen_blanked_p = True;
-  si->blank_time = time ((time_t) 0);
+  si->blank_time = time ((time_t *) 0);
   si->last_wall_clock_time = 0;
 
   store_saver_status (si);  /* store blank time */
@@ -1803,7 +1803,7 @@ unblank_screen (saver_info *si)
     XUnmapWindow (si->dpy, si->screens[i].screensaver_window);
 
   si->screen_blanked_p = False;
-  si->blank_time = time ((time_t) 0);
+  si->blank_time = time ((time_t *) 0);
   si->last_wall_clock_time = 0;
 
   store_saver_status (si);  /* store unblank time */

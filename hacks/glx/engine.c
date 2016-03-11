@@ -24,7 +24,7 @@
 #ifdef STANDALONE
 #define DEFAULTS        "*delay:           30000        \n" \
                         "*showFPS:         False        \n" \
-			"*titleFont:  -*-helvetica-medium-r-normal-*-180-*\n" \
+	"*titleFont:  -*-helvetica-medium-r-normal-*-*-180-*-*-*-*-*-*\n" \
 
 # define refresh_engine 0
 # include "xlockmore.h"              /* from the xscreensaver distribution */
@@ -32,7 +32,7 @@
 # include "xlock.h"                  /* from the xlockmore distribution */
 #endif /* !STANDALONE */
 
-#include "glxfonts.h"
+#include "texfont.h"
 #include "rotator.h"
 #include "gltrackball.h"
 
@@ -530,8 +530,8 @@ static int makepiston(Engine *e)
   int polys = 0;
   GLfloat colour[] = {0.6, 0.6, 0.6, 1.0};
   
-  if (e->piston_list) glDeleteLists(1, e->piston_list);
-  e->piston_list = glGenLists(1);
+  /* if (e->piston_list) glDeleteLists(1, e->piston_list); */
+  if (! e->piston_list) e->piston_list = glGenLists(1);
   glNewList(e->piston_list, GL_COMPILE);
   glRotatef(90, 0, 0, 1);
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colour);
@@ -774,8 +774,8 @@ static int makeshaft (Engine *e)
   float crankThick = 0.2;
   float crankDiam = 0.3;
 
-  if (e->shaft_list) glDeleteLists(1, e->shaft_list);
-  e->shaft_list = glGenLists(1);
+  /* if (e->shaft_list) glDeleteLists(1, e->shaft_list); */
+  if (! e->shaft_list) e->shaft_list = glGenLists(1);
   glNewList(e->shaft_list, GL_COMPILE);
 
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blue);
@@ -836,7 +836,8 @@ ENTRYPOINT void reshape_engine(ModeInfo *mi, int width, int height)
  glViewport(0,0,(GLint)width, (GLint) height);
  glMatrixMode(GL_PROJECTION);
  glLoadIdentity();
- glFrustum(-1.0,1.0,-1.0,1.0,1.5,70.0);
+/* glFrustum(-1.0,1.0,-1.0,1.0,1.5,70.0);*/
+ gluPerspective(40.0,((GLdouble)width)/height,1.5,70.0);
  glMatrixMode(GL_MODELVIEW);
  e->win_h = height; 
  e->win_w = width;
@@ -895,7 +896,8 @@ ENTRYPOINT void init_engine(ModeInfo *mi)
     e->trackball = gltrackball_init (True);
  }
 
- if ((e->glx_context = init_GL(mi)) != NULL) {
+ if (!e->glx_context &&   /* re-initting breaks print_texture_label */
+     (e->glx_context = init_GL(mi)) != NULL) {
       reshape_engine(mi, MI_WIDTH(mi), MI_HEIGHT(mi));
  } else {
      MI_CLEARWINDOW(mi);
@@ -972,10 +974,9 @@ ENTRYPOINT void draw_engine(ModeInfo *mi)
 
   glColor3f (1, 1, 0);
   if (do_titles)
-      print_gl_string (mi->dpy, e->font_data,
-                       mi->xgwa.width, mi->xgwa.height,
-                       10, mi->xgwa.height - 10,
-                       e->engine_name, False);
+      print_texture_label (mi->dpy, e->font_data,
+                           mi->xgwa.width, mi->xgwa.height,
+                           1, e->engine_name);
 
   if(mi->fps_p) do_fps(mi);
   glFinish(); 

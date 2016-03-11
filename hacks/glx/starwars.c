@@ -1,4 +1,4 @@
-/* starwars, Copyright (c) 1998-2014 Jamie Zawinski <jwz@jwz.org> and
+/* starwars, Copyright (c) 1998-2015 Jamie Zawinski <jwz@jwz.org> and
  * Claudio Matsuoka <claudio@helllabs.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
@@ -41,9 +41,10 @@
 		 "*showFPS:  False     \n" \
 		 "*fpsTop:   True      \n" \
 		 "*usePty:   False     \n" \
+		 "*texFontCacheSize: 300\n" \
 		 "*font:   " DEF_FONT "\n" \
-		 "*textLiteral: " DEF_TEXT "\n"
-
+		 "*textLiteral: " DEF_TEXT "\n" \
+		 "*program: xscreensaver-text --cols 0"  /* don't wrap */
 
 # define refresh_sws 0
 # define sws_handle_event 0
@@ -52,6 +53,7 @@
 
 #include "xlockmore.h"
 #include "textclient.h"
+#include "utf8wc.h"
 
 #ifdef USE_GL /* whole file */
 
@@ -64,7 +66,6 @@
 # endif
 
 
-#define DEF_PROGRAM    "xscreensaver-text --cols 0"  /* don't wrap */
 #define DEF_LINES      "125"
 #define DEF_STEPS      "35"
 #define DEF_SPIN       "0.03"
@@ -78,14 +79,7 @@
 #define DEF_TEXTURES   "True"
 #define DEF_DEBUG      "False"
 
-/* Utopia 800 needs 64 512x512 textures (4096x4096 bitmap).
-   Utopia 720 needs 16 512x512 textures (2048x2048 bitmap).
-   Utopia 480 needs 16 512x512 textures (2048x2048 bitmap).
-   Utopia 400 needs  4 512x512 textures (1024x1024 bitmap).
-   Utopia 180 needs  1 512x512 texture.
-   Times  240 needs  1 512x512 texture.
- */
-#define DEF_FONT       "-*-utopia-bold-r-normal-*-*-720-*-*-*-*-iso8859-1"
+#define DEF_FONT       "-*-utopia-bold-r-normal-*-*-360-*-*-*-*-*-*"
 
 #define TAB_WIDTH        8
 
@@ -107,7 +101,6 @@ typedef struct {
 
   GLuint text_list, star_list;
   texture_font_data *texfont;
-  int polygon_count;
   text_data *tc;
 
   char *buf;
@@ -115,11 +108,13 @@ typedef struct {
   int buf_tail;
 
   char **lines;
+  int *line_widths;
   int total_lines;
 
   double star_theta;
   double char_width;
   double line_height;
+  double descent;
   double font_scale;
   double intra_line_scroll;
 
@@ -132,7 +127,6 @@ typedef struct {
 
 static sws_configuration *scs = NULL;
 
-static char *program;
 static int max_lines;
 static int scroll_steps;
 static float star_spin;
@@ -148,7 +142,6 @@ static char *alignment_str;
 static int alignment;
 
 static XrmOptionDescRec opts[] = {
-  {"-program",     ".program",   XrmoptionSepArg, 0 },
   {"-lines",       ".lines",     XrmoptionSepArg, 0 },
   {"-steps",       ".steps",     XrmoptionSepArg, 0 },
   {"-spin",        ".spin",      XrmoptionSepArg, 0 },
@@ -174,7 +167,6 @@ static XrmOptionDescRec opts[] = {
 };
 
 static argtype vars[] = {
-  {&program,        "program",   "Program",    DEF_PROGRAM,   t_String},
   {&max_lines,      "lines",     "Integer",    DEF_LINES,     t_Int},
   {&scroll_steps,   "steps",     "Integer",    DEF_STEPS,     t_Int},
   {&star_spin,      "spin",      "Float",      DEF_SPIN,      t_Float},
@@ -254,48 +246,33 @@ strip (char *s, Bool leading, Bool trailing)
 }
 
 
-/* The GLUT font only has ASCII characters in them, so do what we can to
-   convert Latin1 characters to the nearest ASCII equivalent... 
- */
-static void
-latin1_to_ascii (char *s)
-{
-  unsigned char *us = (unsigned char *) s;
-  const unsigned char ascii[95] = {
-    '!', 'C', '#', '#', 'Y', '|', 'S', '_', 'C', '?', '<', '=', '-', 'R', '_',
-    '?', '?', '2', '3', '\'','u', 'P', '.', ',', '1', 'o', '>', '?', '?', '?',
-    '?', 'A', 'A', 'A', 'A', 'A', 'A', 'E', 'C', 'E', 'E', 'E', 'E', 'I', 'I',
-    'I', 'I', 'D', 'N', 'O', 'O', 'O', 'O', 'O', 'x', '0', 'U', 'U', 'U', 'U',
-    'Y', 'p', 'S', 'a', 'a', 'a', 'a', 'a', 'a', 'e', 'c', 'e', 'e', 'e', 'e',
-    'i', 'i', 'i', 'i', 'o', 'n', 'o', 'o', 'o', 'o', 'o', '/', 'o', 'u', 'u',
-    'u', 'u', 'y', 'p', 'y' };
-  while (*us)
-    {
-      if (*us >= 161)
-        *us = ascii[*us - 161];
-      else if (*us > 127)
-        *us = '?';
-      us++;
-    }
-}
-
-
 static int
 sw_string_width (sws_configuration *sc, const char *s)
 {
   if (textures_p)
-    return texture_string_width (sc->texfont, s, 0);
+    {
+      XCharStruct e;
+      texture_string_metrics (sc->texfont, s, &e, 0, 0);
+      return e.width;
+    }
   else
     return glutStrokeLength (GLUT_FONT, (unsigned char *) s);
 }
 
+
 static int
-char_width (sws_configuration *sc, char c)
+sw_string_width2 (sws_configuration *sc, const char *s, size_t size)
 {
-  char s[2];
-  s[0] = c;
-  s[1] = 0;
-  return sw_string_width (sc, s);
+  char *s2 = (char *) malloc (size + 1);
+  int result;
+
+  strncpy (s2, s, size);
+  s2[size] = 0;
+
+  result = sw_string_width (sc, s2);
+
+  free (s2);
+  return result;
 }
 
 
@@ -306,8 +283,6 @@ get_more_lines (sws_configuration *sc)
 {
   /* wrap anyway, if it's absurdly long. */
   int wrap_pix = (wrap_p ? sc->line_pixel_width : 10000);
-  
-  int col = 0;
   int col_pix = 0;
 
   char *s = sc->buf;
@@ -328,87 +303,121 @@ get_more_lines (sws_configuration *sc)
 
   while (sc->total_lines < max_lines)
     {
-      int cw;
+      char *next_s = s;
+      unsigned counter = 0;
 
-      if (s >= sc->buf + sc->buf_tail)
-        /* Reached end of buffer before end of line.  Bail. */
-        return;
+      /* OS X is really slow to calcuate the bounds for a line of text,
+         so skip ahead a bit.
 
-      cw = char_width (sc, *s);
-
-      if (*s == '\r' || *s == '\n' ||
-          col_pix + cw >= wrap_pix)
+         Really though, the right thing to do is probably to wrap
+         CTLineCreateTruncatedLine, one way or another. */
+      for (;;)
         {
-          int L = s - sc->buf;
+          if (next_s >= sc->buf + sc->buf_tail)
+            break;
 
-          if (*s == '\r' || *s == '\n')
+          if (!counter)
             {
-              if (*s == '\r' && s[1] == '\n')  /* swallow CRLF too */
-                *s++ = 0;
+              if (s > sc->buf &&
+                  sw_string_width2 (sc, sc->buf, next_s - sc->buf) >= wrap_pix)
+                break;
 
-              *s++ = 0;
-            }
-          else
-            {
-              /* We wrapped -- try to back up to the previous word boundary. */
-              char *s2 = s;
-              int n = 0;
-              while (s2 > sc->buf && *s2 != ' ' && *s2 != '\t')
-                s2--, n++;
-              if (s2 > sc->buf)
-                {
-                  s = s2;
-                  *s++ = 0;
-                  L = s - sc->buf;
-                }
+              counter = 12; /* <-- Adjust to taste. */
+              s = next_s;
             }
 
-          sc->lines[sc->total_lines] = (char *) malloc (L+1);
-          memcpy (sc->lines[sc->total_lines], sc->buf, L);
-          sc->lines[sc->total_lines][L] = 0;
+          if (*next_s == '\r' || *next_s == '\n')
+            break;
 
-          if (!textures_p)
-            latin1_to_ascii (sc->lines[sc->total_lines]);
-
-          {
-            char *t = sc->lines[sc->total_lines];
-            char *ut = untabify (t);
-            strip (ut, (alignment == 0), 1); /* if centering, strip
-                                                leading whitespace too */
-            sc->lines[sc->total_lines] = ut;
-            free (t);
-          }
-
-          sc->total_lines++;
-
-          if (sc->buf_tail > (s - sc->buf))
-            {
-              int i = sc->buf_tail - (s - sc->buf);
-              memmove (sc->buf, s, i);
-              sc->buf_tail = i;
-              sc->buf[sc->buf_tail] = 0;
-            }
-          else
-            {
-              sc->buf_tail = 0;
-            }
-
-          sc->buf[sc->buf_tail] = 0;
-          s = sc->buf;
-          col = 0;
-          col_pix = 0;
+          --counter;
+          ++next_s;
         }
-      else
+
+      for (;;)
         {
-          col++;
-          col_pix += cw;
-          if (*s == '\t')
+          if (s >= sc->buf + sc->buf_tail)
+            /* Reached end of buffer before end of line.  Bail. */
+            return;
+
+          /* When checking pixel width, always measure the line from the
+             beginning, or else multi-byte UTF-8 characters, particularly
+             combining diacriticals, aren't measured right. */
+
+          if (*s == '\r' || *s == '\n' ||
+              (s > sc->buf && sw_string_width2 (sc, sc->buf, s - sc->buf) >= wrap_pix))
             {
-              int tab_pix = TAB_WIDTH * sc->char_width;
-              col     = TAB_WIDTH * ((col / TAB_WIDTH) + 1);
-              col_pix = tab_pix   * ((col / tab_pix)   + 1);
+              int L = s - sc->buf;
+
+              if (*s == '\r' || *s == '\n')
+                {
+                  if (*s == '\r' && s[1] == '\n')  /* swallow CRLF too */
+                    *s++ = 0;
+
+                  *s++ = 0;
+                }
+              else
+                {
+                  /* We wrapped -- try to back up to the previous word boundary. */
+                  char *s2 = s;
+                  int n = 0;
+                  while (s2 > sc->buf && *s2 != ' ' && *s2 != '\t')
+                    s2--, n++;
+                  if (s2 > sc->buf)
+                    {
+                      s = s2;
+                      *s++ = 0;
+                      L = s - sc->buf;
+                    }
+                }
+
+              sc->lines[sc->total_lines] = (char *) malloc (L+1);
+              memcpy (sc->lines[sc->total_lines], sc->buf, L);
+              sc->lines[sc->total_lines][L] = 0;
+
+              if (!textures_p)
+                {
+                  /* The GLUT font only has ASCII characters. */
+                  char *s1 = utf8_to_latin1 (sc->lines[sc->total_lines], True);
+                  free (sc->lines[sc->total_lines]);
+                  sc->lines[sc->total_lines] = s1;
+                }
+
+              {
+                char *t = sc->lines[sc->total_lines];
+                char *ut = untabify (t);
+                strip (ut, (alignment == 0), 1); /* if centering, strip
+                                                    leading whitespace too */
+                sc->lines[sc->total_lines] = ut;
+                free (t);
+              }
+
+              sc->line_widths[sc->total_lines] =
+                sw_string_width(sc, sc->lines[sc->total_lines]);
+
+              sc->total_lines++;
+
+              if (sc->buf_tail > (s - sc->buf))
+                {
+                  int i = sc->buf_tail - (s - sc->buf);
+                  memmove (sc->buf, s, i);
+                  sc->buf_tail = i;
+                  sc->buf[sc->buf_tail] = 0;
+                }
+              else
+                {
+                  sc->buf_tail = 0;
+                }
+
+              sc->buf[sc->buf_tail] = 0;
+              s = sc->buf;
+              col_pix = 0;
+
+              break;
             }
-          s++;
+          else
+            {
+              s++;
+            }
         }
     }
 }
@@ -431,29 +440,45 @@ draw_string (sws_configuration *sc, GLfloat x, GLfloat y, const char *s)
 
   if (debug_p)
     {
-      GLfloat w;
       GLfloat h = sc->line_height / sc->font_scale;
-      char c[2];
-      c[1]=0;
-      s = os;
+      char **chars = utf8_split (os, 0);
+      int i, w = 0;
+      char *s2 = (char *) malloc (strlen(s) + 1);
+      *s2 = 0;
+
       if (textures_p) glDisable (GL_TEXTURE_2D);
       glLineWidth (1);
-      glColor3f (0.4, 0.4, 0.4);
-      glPushMatrix ();
-      glTranslatef (x, y, 0);
-      while (*s)
+
+      glColor3f (0.2, 0.2, 0.5);
+
+      glBegin (GL_LINES);
+
+      for (i = 0; chars[i]; i++)
         {
-          *c = *s++;
-          w = sw_string_width (sc, c);
-          glBegin (GL_LINE_LOOP);
-          glVertex3f (0, 0, 0);
-          glVertex3f (w, 0, 0);
-          glVertex3f (w, h, 0);
-          glVertex3f (0, h, 0);
-          glEnd();
-          glTranslatef (w, 0, 0);
+          glVertex3f (x + w, y - sc->descent, 0);	/* char left */
+          glVertex3f (x + w, y - sc->descent + h, 0);
+          strcat (s2, chars[i]);
+          w = sw_string_width (sc, s2);
+          free (chars[i]);
         }
-      glPopMatrix ();
+
+      glVertex3f (x + w, y - sc->descent, 0);		/* char right */
+      glVertex3f (x + w, y - sc->descent + h, 0);
+
+      glVertex3f (x,     y - sc->descent + h, 0);	/* ascent */
+      glVertex3f (x + w, y - sc->descent + h, 0);
+
+      glVertex3f (x - sc->char_width,     y, 0);	/* baseline */
+      glVertex3f (x + sc->char_width + w, y, 0);
+
+      glVertex3f (x,     y - sc->descent, 0);		/* descent */
+      glVertex3f (x + w, y - sc->descent, 0);
+
+      glEnd();
+
+      free (s2);
+      free (chars);
+
       if (textures_p) glEnable (GL_TEXTURE_2D);
     }
 }
@@ -670,8 +695,6 @@ gl_init (ModeInfo *mi)
 {
   sws_configuration *sc = &scs[MI_SCREEN(mi)];
 
-  program = get_string_resource (mi->dpy, "program", "Program");
-
   glDisable (GL_LIGHTING);
   glDisable (GL_DEPTH_TEST);
 
@@ -715,7 +738,9 @@ init_sws (ModeInfo *mi)
 
   sc->dpy = MI_DISPLAY(mi);
   sc = &scs[MI_SCREEN(mi)];
+  /* Unchecked malloc. :( */
   sc->lines = (char **) calloc (max_lines+1, sizeof(char *));
+  sc->line_widths = (int *) calloc (max_lines+1, sizeof(int));
 
   if ((sc->glx_context = init_GL(mi)) != NULL) {
     gl_init(mi);
@@ -727,11 +752,14 @@ init_sws (ModeInfo *mi)
 
   if (textures_p)
     {
-      int cw, lh;
+      XCharStruct e;
+      int cw, ascent, descent;
       sc->texfont = load_texture_font (MI_DISPLAY(mi), "font");
-      cw = texture_string_width (sc->texfont, "n", &lh);
+      texture_string_metrics (sc->texfont, "n", &e, &ascent, &descent);
+      cw = e.width;
       sc->char_width = cw;
-      font_height = lh;
+      font_height = ascent + descent;
+      sc->descent = descent;
       glEnable(GL_ALPHA_TEST);
       glEnable (GL_TEXTURE_2D);
 
@@ -757,6 +785,7 @@ init_sws (ModeInfo *mi)
     {
       font_height = GLUT_FONT->top - GLUT_FONT->bottom;
       sc->char_width = glutStrokeWidth (GLUT_FONT, 'z'); /* 'n' seems wide */
+      sc->descent = 0;
     }
   
   sc->font_scale = 1.0 / sc->char_width;
@@ -787,13 +816,16 @@ init_sws (ModeInfo *mi)
   sc->font_scale /= target_columns;
   sc->line_height = font_height * sc->font_scale;
 
-
-  /* Buffer only two lines of text.
+  /* Buffer only a few lines of text.
      If the buffer is too big, there's a significant delay between
      when the program launches and when the text appears, which can be
      irritating for time-sensitive output (clock, current music, etc.)
+
+     I'd like to buffer only 2 lines, but we need to assume that we
+     could get a whole line of N-byte Unicrud, and if we fill the buffer
+     before hitting the end of the line, we stall.
    */
-  sc->buf_size = target_columns * 2;
+  sc->buf_size = target_columns * 2 * 4;
   if (sc->buf_size < 80) sc->buf_size = 80;
   sc->buf = (char *) calloc (1, sc->buf_size);
 
@@ -905,7 +937,7 @@ draw_sws (ModeInfo *mi)
       glLineWidth (1);
       glPopMatrix();
 
-      glColor3f (0.4, 0.4, 0.4);
+      glColor3f (0.2, 0.2, 0.2);
       for (i = 0; i < 16; i++)
         {
           box (1, 1, 1);
@@ -914,14 +946,79 @@ draw_sws (ModeInfo *mi)
         }
       if (textures_p) glEnable (GL_TEXTURE_2D);
       glPopMatrix ();
+      check_gl_error ("debug render");
     }
 
   /* Scroll to current position */
   glTranslatef (0.0, sc->intra_line_scroll, 0.0);
 
   glColor3f (1.0, 1.0, 0.4);
-  glCallList (sc->text_list);
-  mi->polygon_count = sc->polygon_count;
+
+  mi->polygon_count = 0;
+
+  glPushMatrix ();
+  glScalef (sc->font_scale, sc->font_scale, sc->font_scale);
+  for (i = 0; i < sc->total_lines; i++)
+    {
+      double fade = (fade_p ? 1.0 * i / sc->total_lines : 1.0);
+      int offscreen_lines = 2;
+
+      double x = -0.5;
+      double y =  ((sc->total_lines - (i + offscreen_lines) - 1)
+                   * sc->line_height);
+      double xoff = 0;
+      char *line = sc->lines[i];
+
+      if (debug_p)
+        {
+          double xx = x * 1.4;  /* a little more to the left */
+          char n[20];
+          sprintf(n, "%d:", i);
+          glColor3f (1.0, 1.0, 1.0);
+          draw_string (sc, xx / sc->font_scale, y / sc->font_scale, n);
+        }
+
+      if (!line || !*line)
+        continue;
+
+      if (sc->line_thickness != 1 && !textures_p)
+        {
+          int max_thick_lines = MAX_THICK_LINES;
+          GLfloat thinnest_line = 1.0;
+          GLfloat thickest_line = sc->line_thickness;
+          GLfloat range = thickest_line - thinnest_line;
+          GLfloat thickness;
+
+          int j = sc->total_lines - i - 1;
+
+          if (j > max_thick_lines)
+            thickness = thinnest_line;
+          else
+            thickness = (thinnest_line +
+                         (range * ((max_thick_lines - j) /
+                                   (GLfloat) max_thick_lines)));
+
+          glLineWidth (thickness);
+        }
+
+      if (alignment >= 0)
+        {
+          int n = sc->line_widths[i];
+          xoff = 1.0 - (n * sc->font_scale);
+        }
+
+      if (alignment == 0)
+        xoff /= 2;
+
+      glColor3f (fade, fade, 0.5 * fade);
+      draw_string (sc, (x + xoff) / sc->font_scale, y / sc->font_scale,
+                   line);
+      if (textures_p)
+        mi->polygon_count += strlen (line);
+    }
+  glPopMatrix ();
+
+
 
   sc->intra_line_scroll += sc->line_height / scroll_steps;
 
@@ -936,8 +1033,10 @@ draw_sws (ModeInfo *mi)
       /* Scroll the contents of the lines array toward 0. */
       if (sc->total_lines > 0)
         {
-          for (i = 1; i < sc->total_lines; i++)
+          for (i = 1; i < sc->total_lines; i++) {
             sc->lines[i-1] = sc->lines[i];
+            sc->line_widths[i-1] = sc->line_widths[i];
+          }
           sc->lines[--sc->total_lines] = 0;
         }
 
@@ -949,72 +1048,6 @@ draw_sws (ModeInfo *mi)
            here so that new text still pulls in from the bottom of
            the screen, isntead of just appearing. */
         sc->total_lines = max_lines;
-
-      glDeleteLists (sc->text_list, 1);
-      sc->text_list = glGenLists (1);
-      glNewList (sc->text_list, GL_COMPILE);
-      sc->polygon_count = 0;
-      glPushMatrix ();
-      glScalef (sc->font_scale, sc->font_scale, sc->font_scale);
-      for (i = 0; i < sc->total_lines; i++)
-        {
-          double fade = (fade_p ? 1.0 * i / sc->total_lines : 1.0);
-          int offscreen_lines = 2;
-
-          double x = -0.5;
-          double y =  ((sc->total_lines - (i + offscreen_lines) - 1)
-                       * sc->line_height);
-          double xoff = 0;
-          char *line = sc->lines[i];
-
-          if (debug_p)
-            {
-              double xx = x * 1.4;  /* a little more to the left */
-              char n[20];
-              sprintf(n, "%d:", i);
-              draw_string (sc, xx / sc->font_scale, y / sc->font_scale, n);
-            }
-
-          if (!line || !*line)
-            continue;
-
-          if (sc->line_thickness != 1 && !textures_p)
-            {
-              int max_thick_lines = MAX_THICK_LINES;
-              GLfloat thinnest_line = 1.0;
-              GLfloat thickest_line = sc->line_thickness;
-              GLfloat range = thickest_line - thinnest_line;
-              GLfloat thickness;
-
-              int j = sc->total_lines - i - 1;
-
-              if (j > max_thick_lines)
-                thickness = thinnest_line;
-              else
-                thickness = (thinnest_line +
-                             (range * ((max_thick_lines - j) /
-                                       (GLfloat) max_thick_lines)));
-
-              glLineWidth (thickness);
-            }
-
-          if (alignment >= 0)
-            {
-              int n = sw_string_width (sc, line);
-              xoff = 1.0 - (n * sc->font_scale);
-            }
-
-          if (alignment == 0)
-            xoff /= 2;
-
-          glColor3f (fade, fade, 0.5 * fade);
-          draw_string (sc, (x + xoff) / sc->font_scale, y / sc->font_scale,
-                       line);
-          if (textures_p)
-            sc->polygon_count += strlen (line);
-        }
-      glPopMatrix ();
-      glEndList ();
     }
 
   glPopMatrix ();

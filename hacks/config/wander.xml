@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=2ZZC46Z9wJE"/>
+
   <hgroup>
    <vgroup>
     <number id="delay" type="slider" arg="-delay %"
@@ -46,7 +48,7 @@
   <_description>
 A colorful random-walk.
 
-http://en.wikipedia.org/wiki/Random_walk
+https://en.wikipedia.org/wiki/Random_walk
 
 Written by Rick Campbell; 1999.
   </_description>

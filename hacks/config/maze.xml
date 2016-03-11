@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=-u4neMXIRA8"/>
+
   <hgroup>
    <vgroup>
     <number id="delay" type="slider" arg="-solve-delay %"
@@ -60,8 +62,8 @@ Generates random mazes, with three different algorithms: Kruskal,
 Prim, and a depth-first recursive backtracker.  It also solves them.
 Backtracking and look-ahead paths are displayed in different colors.
 
-http://en.wikipedia.org/wiki/Maze_generation_algorithm
-http://en.wikipedia.org/wiki/Maze_solving_algorithm
+https://en.wikipedia.org/wiki/Maze_generation_algorithm
+https://en.wikipedia.org/wiki/Maze_solving_algorithm
 
 Written by Martin Weiss, Dave Lemke, Jim Randell, Jamie Zawinski,
 Johannes Keukelaar, and Zack Weinberg; 1985.

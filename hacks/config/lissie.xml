@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=6EBNCXcD9f0"/>
+
   <hgroup>
    <vgroup>
     <number id="delay" type="slider" arg="-delay %"
@@ -43,7 +45,7 @@ version 5.08.
 
 Lissajous loops.  This one draws the progress of circular shapes along a path.
 
-http://en.wikipedia.org/wiki/Lissajous_curve
+https://en.wikipedia.org/wiki/Lissajous_curve
 
 Written by Alexander Jolk; 1997.
   </_description>

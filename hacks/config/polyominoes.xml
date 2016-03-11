@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=6j2H2gL8cws"/>
+
   <boolean id="identical" _label="Identical pieces" arg-set="-identical"/>
 
   <number id="delay" type="slider" arg="-delay %"
@@ -27,7 +29,7 @@
 Repeatedly attempts to completely fill a rectangle with
 irregularly-shaped puzzle pieces.
 
-http://en.wikipedia.org/wiki/Polyomino
+https://en.wikipedia.org/wiki/Polyomino
 
 Written by Stephen Montgomery-Smith; 2002.
   </_description>

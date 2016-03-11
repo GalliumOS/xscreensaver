@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=TGQRLAhDLv0"/>
+
   <number id="delay" type="slider" arg="-delay %"
           _label="Frame rate" _low-label="Low" _high-label="High"
           low="0" high="100000" default="20000"
@@ -25,7 +27,7 @@
   <_description>
 The recursive Sierpinski tetrahedron fractal.
 
-http://en.wikipedia.org/wiki/Sierpinski_triangle#Analogs_in_higher_dimension
+https://en.wikipedia.org/wiki/Sierpinski_triangle#Analogs_in_higher_dimension
 
 Written by Jamie Zawinski and Tim Robinson; 1999.
   </_description>

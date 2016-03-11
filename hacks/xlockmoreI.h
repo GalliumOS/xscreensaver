@@ -1,5 +1,5 @@
 /* xlockmore.h --- xscreensaver compatibility layer for xlockmore modules.
- * xscreensaver, Copyright (c) 1997-2012 Jamie Zawinski <jwz@jwz.org>
+ * xscreensaver, Copyright (c) 1997-2014 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -45,6 +45,8 @@ typedef struct ModeInfo ModeInfo;
 #   include <OpenGL/gl.h>
 #   include <OpenGL/glu.h>
 #  endif
+# elif defined(HAVE_ANDROID)
+#  include <GLES/gl.h>
 # else
 #  include <GL/gl.h>
 #  include <GL/glu.h>
@@ -78,13 +80,7 @@ extern void xlockmore_setup (struct xscreensaver_function_table *, void *);
 extern void xlockmore_do_fps (Display *, Window, fps_state *, void *);
 
 
-/* Compatibility with the xlockmore RNG API
-   (note that the xlockmore hacks never expect negative numbers.)
- */
-#define LRAND()			((long) (random() & 0x7fffffff))
-#define NRAND(n)		((int) (LRAND() % (n)))
-#define MAXRAND			(2147483648.0) /* unsigned 1<<31 as a float */
-#define SRAND(n)		/* already seeded by screenhack.c */
+/* The xlockmore RNG API is implemented in utils/yarandom.h. */
 
 
 struct ModeInfo {
@@ -166,7 +162,7 @@ struct xlockmore_function_table {
   Bool (*hack_handle_events) (ModeInfo *, XEvent *);
   ModeSpecOpt *opts;
 
-  unsigned screen_count; /* Only used on the OS X and iOS ports. */
+  unsigned int screen_count; /* Only used on the OS X and iOS ports. */
 };
 
 #endif /* __XLOCKMORE_INTERNAL_H__ */

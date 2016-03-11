@@ -1,4 +1,4 @@
-/* xscreensaver, Copyright (c) 1991-2013 Jamie Zawinski <jwz@jwz.org>
+/* xscreensaver, Copyright (c) 1991-2015 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -92,6 +92,14 @@
  *   would malfunction if some other client selected KeyPress events on the
  *   subwindows.  It is an incredible misdesign that one client can make
  *   another client malfunction in this way.
+ *
+ *   But here's a new kink that started showing up in late 2014: GNOME programs
+ *   don't actually select for or receive KeyPress events! They do it behind
+ *   the scenes through some kind of Input Method magic, even when running in
+ *   an en_US locale.  However, in that case, those applications *do* seem to
+ *   update the _NET_WM_USER_TIME on their own windows every time they have
+ *   received a secret KeyPress, so we *also* monitor that property on every
+ *   window, and treat changes to it as identical to KeyPress.
  *
  *   To detect mouse motion, we periodically wake up and poll the mouse
  *   position and button/modifier state, and notice when something has
@@ -600,6 +608,16 @@ lock_initialization (saver_info *si, int *argc, char **argv)
         }
     }
 
+  /* Like MacOS, locking under Wayland's embedded X11 server does not work.
+     (X11 grabs don't work because the Wayland window manager lives at a
+     higher level than the X11 emulation layer.)
+   */
+  if (!si->locking_disabled_p && getenv ("WAYLAND_DISPLAY"))
+    {
+      si->locking_disabled_p = True;
+      si->nolock_reason = "Cannot lock securely under Wayland";
+    }
+
   if (si->prefs.debug_p)    /* But allow locking anyway in debug mode. */
     si->locking_disabled_p = False;
 
@@ -659,6 +677,7 @@ connect_to_server (saver_info *si, int *argc, char **argv)
   XA_XSETROOT_ID = XInternAtom (si->dpy, "_XSETROOT_ID", False);
   XA_ESETROOT_PMAP_ID = XInternAtom (si->dpy, "ESETROOT_PMAP_ID", False);
   XA_XROOTPMAP_ID = XInternAtom (si->dpy, "_XROOTPMAP_ID", False);
+  XA_NET_WM_USER_TIME = XInternAtom (si->dpy, "_NET_WM_USER_TIME", False);
   XA_ACTIVATE = XInternAtom (si->dpy, "ACTIVATE", False);
   XA_DEACTIVATE = XInternAtom (si->dpy, "DEACTIVATE", False);
   XA_RESTART = XInternAtom (si->dpy, "RESTART", False);
@@ -1256,6 +1275,12 @@ main_loop (saver_info *si)
                   "%s: unable to grab keyboard or mouse!  Blanking aborted.\n",
                        blurb());
 
+              /* Since we were unable to blank, clearly we're not locked,
+                 but we might have been prematurely marked as locked by
+                 the LOCK ClientMessage. */
+              if (si->locked_p)
+                set_locked_p (si, False);
+
               schedule_wakeup_event (si, retry, p->debug_p);
               continue;
             }
@@ -1526,7 +1551,7 @@ main (int argc, char **argv)
   if (p->verbose_p) analyze_display (si);
   initialize_server_extensions (si);
 
-  si->blank_time = time ((time_t) 0); /* must be before ..._window */
+  si->blank_time = time ((time_t *) 0); /* must be before ..._window */
   initialize_screensaver_window (si);
 
   select_events (si);
@@ -2044,7 +2069,16 @@ handle_clientmessage (saver_info *si, XEvent *event, Bool until_idle_p)
 			    : "locking.");
 	  sprintf (buf, "LOCK ClientMessage received; %s", response);
 	  clientmessage_response (si, window, False, buf, response);
+
+          /* Note that this leaves things in a slightly inconsistent state:
+             we are blanked but not locked.  And blanking might actually
+             fail if we can't get the grab. */
 	  set_locked_p (si, True);
+
+           /* Have to set the time or xscreensaver-command doesn't
+              report the LOCK state change. */
+           si->blank_time = time ((time_t *) 0);
+
 	  si->selection_mode = 0;
 	  si->demoing_p = False;
 

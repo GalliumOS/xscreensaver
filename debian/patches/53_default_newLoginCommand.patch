@@ -1,15 +1,15 @@
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
---- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:48:57.000000000 +0200
-+++ xscreensaver/driver/XScreenSaver.ad.in	2014-10-07 22:48:57.000000000 +0200
-@@ -143,7 +143,9 @@
- ! For Gnome: probably "gdmflexiserver -ls".  KDE, probably "kdmctl reserve".
+--- xscreensaver.orig/driver/XScreenSaver.ad.in	2015-07-19 11:29:34.000000000 +0200
++++ xscreensaver/driver/XScreenSaver.ad.in	2015-07-19 11:29:34.000000000 +0200
+@@ -144,7 +144,9 @@
  ! Or maybe yet another wheel-reinvention, "lxdm -c USER_SWITCH".
+ ! Oh wait, this wheel just keeps getting better: "dm-tool switch-to-greeter".
  !
 -@NEW_LOGIN_COMMAND_P@*newLoginCommand:	@NEW_LOGIN_COMMAND@
 +! @NEW_LOGIN_COMMAND_P@*newLoginCommand:	@NEW_LOGIN_COMMAND@
 +! Debian: Hard-wire the command in case the build machine does not have gdm
-+*newLoginCommand:	gdmflexiserver -ls
++*newLoginCommand:	lxdm -c USER_SWITCH
  
  
  ! Turning on "installColormap" on 8-bit systems interacts erratically with

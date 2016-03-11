@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=rHY8dR1urQk"/>
+
   <hgroup>
    <vgroup>
     <number id="delay" type="slider" arg="-delay %"
@@ -40,7 +42,7 @@
 A gear system marches across the screen.
 See also the "Gears" and "MoebiusGears" screen savers.
 
-http://en.wikipedia.org/wiki/Involute_gear
+https://en.wikipedia.org/wiki/Involute_gear
 
 Written by Jamie Zawinski; 2004.
   </_description>
