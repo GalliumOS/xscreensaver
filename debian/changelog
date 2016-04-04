@@ -1,3 +1,12 @@
+xscreensaver (5.34-1ubuntu1-galliumos1.1) vivid-galliumos; urgency=medium
+
+  * Reapply our 5.34 patches
+    - Changed the xscreensaver pam file to fix an issue with ecryptfs
+    - Changed the new login command for lxdm
+      -- Hugh Greenberg <hugh@galliumos.org>  Thu, 10 Mar 2016 20:23:19 -0400
+
+ -- reynhout <reynhout@galliumos.org>  Mon, 04 Apr 2016 18:28:34 +0000
+
 xscreensaver (5.34-1ubuntu1-galliumos0) vivid-galliumos; urgency=medium
 
   * Rebase our 1.0 branch on upstream 5.34
