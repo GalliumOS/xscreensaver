@@ -9,7 +9,7 @@ Index: xscreensaver/driver/XScreenSaver.ad.in
 -@NEW_LOGIN_COMMAND_P@*newLoginCommand:	@NEW_LOGIN_COMMAND@
 +! @NEW_LOGIN_COMMAND_P@*newLoginCommand:	@NEW_LOGIN_COMMAND@
 +! Debian: Hard-wire the command in case the build machine does not have gdm
-+*newLoginCommand:	gdmflexiserver -ls
++*newLoginCommand:	lxdm -c USER_SWITCH
  
  
  ! Turning on "installColormap" on 8-bit systems interacts erratically with

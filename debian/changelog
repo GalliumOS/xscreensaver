@@ -1,3 +1,19 @@
+xscreensaver (5.34-1ubuntu1-galliumos1.1) vivid-galliumos; urgency=medium
+
+  * Pull our 5.34 patches from xenon to vivid:
+    - Changed the xscreensaver pam file to fix an issue with ecryptfs
+    - Changed the new login command for lxdm
+      -- Hugh Greenberg <hugh@galliumos.org>  Thu, 10 Mar 2016 20:23:19 -0400
+  * Skip version 5.34-1ubuntu1-galliumos1 to avoid conflicts with xenon pkg
+
+ -- reynhout <reynhout@galliumos.org>  Mon, 04 Apr 2016 17:41:11 +0000
+
+xscreensaver (5.34-1ubuntu1-galliumos0) vivid-galliumos; urgency=medium
+
+  * Rebase our 1.0 branch on upstream 5.34
+
+ -- reynhout <reynhout@galliumos.org>  Mon, 04 Apr 2016 17:41:11 +0000
+
 xscreensaver (5.30-1ubuntu1) vivid; urgency=medium
 
   * Merge from Debian unstable. (LP: #1406825) Remaining changes:
