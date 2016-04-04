@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=G1OLn4Mdk5Y"/>
+
   <number id="iterations" type="slider" arg="-iterations %"
           _label="Iterations" _low-label="Small" _high-label="Large"
           low="0" high="10000" default="4000"/>
@@ -26,8 +28,8 @@
   <_description>
 Inkblot patterns via a reflected random walk.
 
-http://en.wikipedia.org/wiki/Rorschach_inkblot_test
-http://en.wikipedia.org/wiki/Random_walk
+https://en.wikipedia.org/wiki/Rorschach_inkblot_test
+https://en.wikipedia.org/wiki/Random_walk
 
 Written by Jamie Zawinski; 1992.
   </_description>

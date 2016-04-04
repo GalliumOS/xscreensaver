@@ -5,16 +5,14 @@ set -e
 case "$1" in 
   remove|purge)
 	if [ -L /etc/X11/app-defaults/XScreenSaver ]; then
-	  rm /etc/X11/app-defaults/XScreenSaver
-	  if [ -f /etc/X11/app-defaults/XScreenSaver-nogl ]; then
-	    ln -sf XScreenSaver-nogl /etc/X11/app-defaults/XScreenSaver
-	  fi
-	fi
-	if [ -L /usr/X11R6/lib/X11/app-defaults/XScreenSaver ]; then
-		rm /usr/X11R6/lib/X11/app-defaults/XScreenSaver
-	fi
-	if [ -L /usr/doc/xscreensaver-gl ]; then
-		rm -f /usr/doc/xscreensaver-gl
+	    if [ "$(readlink /etc/X11/app-defaults/XScreenSaver)" = "XScreenSaver-gl" ]; then
+		if [ -e /etc/X11/app-defaults/XScreenSaver-nogl ]; then
+		    ln -sf XScreenSaver-nogl /etc/X11/app-defaults/XScreenSaver.dpkg-new
+		    mv -f /etc/X11/app-defaults/XScreenSaver.dpkg-new /etc/X11/app-defaults/XScreenSaver
+		else
+		    rm -f /etc/X11/app-defaults/XScreenSaver
+		fi
+	    fi
 	fi
 	;;
 esac

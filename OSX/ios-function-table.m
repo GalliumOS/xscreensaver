@@ -1,5 +1,5 @@
 /* Generated file, do not edit.
-   Created: Wed Jul 30 23:28:05 2014 by build-fntable.pl 1.2.
+   Created: Sat May  2 19:45:40 2015 by build-fntable.pl 1.3.
  */
 
 #import <Foundation/Foundation.h>
@@ -20,6 +20,7 @@ extern struct xscreensaver_function_table
  *attraction_xscreensaver_function_table,
  *atunnel_xscreensaver_function_table,
  *barcode_xscreensaver_function_table,
+ *binaryring_xscreensaver_function_table,
  *blaster_xscreensaver_function_table,
  *blinkbox_xscreensaver_function_table,
  *blitspin_xscreensaver_function_table,
@@ -38,6 +39,7 @@ extern struct xscreensaver_function_table
  *ccurve_xscreensaver_function_table,
  *celtic_xscreensaver_function_table,
  *circuit_xscreensaver_function_table,
+ *cityflow_xscreensaver_function_table,
  *cloudlife_xscreensaver_function_table,
  *companioncube_xscreensaver_function_table,
  *compass_xscreensaver_function_table,
@@ -79,6 +81,7 @@ extern struct xscreensaver_function_table
  *galaxy_xscreensaver_function_table,
  *gears_xscreensaver_function_table,
  *geodesic_xscreensaver_function_table,
+ *geodesicgears_xscreensaver_function_table,
  *gflux_xscreensaver_function_table,
  *glblur_xscreensaver_function_table,
  *glcells_xscreensaver_function_table,
@@ -160,6 +163,7 @@ extern struct xscreensaver_function_table
  *rdbomb_xscreensaver_function_table,
  *ripples_xscreensaver_function_table,
  *rocks_xscreensaver_function_table,
+ *romanboy_xscreensaver_function_table,
  *rorschach_xscreensaver_function_table,
  *rotzoomer_xscreensaver_function_table,
  *rubik_xscreensaver_function_table,
@@ -174,6 +178,7 @@ extern struct xscreensaver_function_table
  *sonar_xscreensaver_function_table,
  *speedmine_xscreensaver_function_table,
  *spheremonics_xscreensaver_function_table,
+ *splitflap_xscreensaver_function_table,
  *spotlight_xscreensaver_function_table,
  *sproingies_xscreensaver_function_table,
  *squiral_xscreensaver_function_table,
@@ -233,6 +238,7 @@ NSDictionary *make_function_table_dict(void)
 	[NSValue valueWithPointer:&attraction_xscreensaver_function_table], @"attraction",
 	[NSValue valueWithPointer:&atunnel_xscreensaver_function_table], @"atunnel",
 	[NSValue valueWithPointer:&barcode_xscreensaver_function_table], @"barcode",
+	[NSValue valueWithPointer:&binaryring_xscreensaver_function_table], @"binaryring",
 	[NSValue valueWithPointer:&blaster_xscreensaver_function_table], @"blaster",
 	[NSValue valueWithPointer:&blinkbox_xscreensaver_function_table], @"blinkbox",
 	[NSValue valueWithPointer:&blitspin_xscreensaver_function_table], @"blitspin",
@@ -251,6 +257,7 @@ NSDictionary *make_function_table_dict(void)
 	[NSValue valueWithPointer:&ccurve_xscreensaver_function_table], @"ccurve",
 	[NSValue valueWithPointer:&celtic_xscreensaver_function_table], @"celtic",
 	[NSValue valueWithPointer:&circuit_xscreensaver_function_table], @"circuit",
+	[NSValue valueWithPointer:&cityflow_xscreensaver_function_table], @"cityflow",
 	[NSValue valueWithPointer:&cloudlife_xscreensaver_function_table], @"cloudlife",
 	[NSValue valueWithPointer:&companioncube_xscreensaver_function_table], @"companioncube",
 	[NSValue valueWithPointer:&compass_xscreensaver_function_table], @"compass",
@@ -292,6 +299,7 @@ NSDictionary *make_function_table_dict(void)
 	[NSValue valueWithPointer:&galaxy_xscreensaver_function_table], @"galaxy",
 	[NSValue valueWithPointer:&gears_xscreensaver_function_table], @"gears",
 	[NSValue valueWithPointer:&geodesic_xscreensaver_function_table], @"geodesic",
+	[NSValue valueWithPointer:&geodesicgears_xscreensaver_function_table], @"geodesicgears",
 	[NSValue valueWithPointer:&gflux_xscreensaver_function_table], @"gflux",
 	[NSValue valueWithPointer:&glblur_xscreensaver_function_table], @"glblur",
 	[NSValue valueWithPointer:&glcells_xscreensaver_function_table], @"glcells",
@@ -373,6 +381,7 @@ NSDictionary *make_function_table_dict(void)
 	[NSValue valueWithPointer:&rdbomb_xscreensaver_function_table], @"rdbomb",
 	[NSValue valueWithPointer:&ripples_xscreensaver_function_table], @"ripples",
 	[NSValue valueWithPointer:&rocks_xscreensaver_function_table], @"rocks",
+	[NSValue valueWithPointer:&romanboy_xscreensaver_function_table], @"romanboy",
 	[NSValue valueWithPointer:&rorschach_xscreensaver_function_table], @"rorschach",
 	[NSValue valueWithPointer:&rotzoomer_xscreensaver_function_table], @"rotzoomer",
 	[NSValue valueWithPointer:&rubik_xscreensaver_function_table], @"rubik",
@@ -387,6 +396,7 @@ NSDictionary *make_function_table_dict(void)
 	[NSValue valueWithPointer:&sonar_xscreensaver_function_table], @"sonar",
 	[NSValue valueWithPointer:&speedmine_xscreensaver_function_table], @"speedmine",
 	[NSValue valueWithPointer:&spheremonics_xscreensaver_function_table], @"spheremonics",
+	[NSValue valueWithPointer:&splitflap_xscreensaver_function_table], @"splitflap",
 	[NSValue valueWithPointer:&spotlight_xscreensaver_function_table], @"spotlight",
 	[NSValue valueWithPointer:&sproingies_xscreensaver_function_table], @"sproingies",
 	[NSValue valueWithPointer:&squiral_xscreensaver_function_table], @"squiral",

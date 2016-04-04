@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=aeWnjSROR8U"/>
+
   <boolean id="label" _label="Draw labels" arg-unset="-no-label"/>
 
   <boolean id="altgeom" _label="Include alternate geometries"
@@ -32,8 +34,8 @@
 A fractal packing of circles with smaller circles, demonstrating
 Descartes's theorem.
 
-http://en.wikipedia.org/wiki/Apollonian_gasket
-http://en.wikipedia.org/wiki/Descartes%27_theorem
+https://en.wikipedia.org/wiki/Apollonian_gasket
+https://en.wikipedia.org/wiki/Descartes%27_theorem
 
 Written by Allan R. Wilks and David Bagley; 2002.
   </_description>

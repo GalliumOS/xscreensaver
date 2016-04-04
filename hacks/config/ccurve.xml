@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=zqIlWzUHOz8"/>
+
   <number id="delay" type="slider" arg="-delay %"
           _label="Change image every" _low-label="0 seconds" _high-label="30 seconds"
           low="0" high="30" default="3"/>
@@ -23,7 +25,7 @@
   <_description>
 Generates self-similar linear fractals, including the classic "C Curve".
 
-http://en.wikipedia.org/wiki/Levy_C_curve
+https://en.wikipedia.org/wiki/Levy_C_curve
 
 Written by Rick Campbell; 1999.
   </_description>

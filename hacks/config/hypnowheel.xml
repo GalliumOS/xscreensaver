@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=QcJnc9EKJrI"/>
+
   <hgroup>
    <vgroup>
     <number id="delay" type="slider" arg="-delay %"
@@ -45,7 +47,7 @@
 A overlapping, translucent spiral patterns.
 The tightness of their spirals fluctuates in and out.
 
-http://en.wikipedia.org/wiki/Moire_pattern
+https://en.wikipedia.org/wiki/Moire_pattern
 
 Written by Jamie Zawinski; 2008.
   </_description>

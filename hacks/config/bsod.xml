@@ -4,6 +4,8 @@
 
  <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=YIqbMCfR3r0"/>
+
  <hgroup>
   <number id="delay" type="slider" arg="-delay %"
           _label="Duration" _low-label="5 seconds" _high-label="2 minutes"
@@ -89,11 +91,11 @@ BSOD stands for "Blue Screen of Death".  The finest in personal
 computer emulation, BSOD simulates popular screen savers from a
 number of less robust operating systems.
 
-http://en.wikipedia.org/wiki/Blue_Screen_of_Death
-http://en.wikipedia.org/wiki/Screen_of_death
-http://en.wikipedia.org/wiki/Guru_Meditation
-http://en.wikipedia.org/wiki/Row_of_Bombs
-http://en.wikipedia.org/wiki/Bomb_%28symbol%29
+https://en.wikipedia.org/wiki/Blue_Screen_of_Death
+https://en.wikipedia.org/wiki/Screen_of_death
+https://en.wikipedia.org/wiki/Guru_Meditation
+https://en.wikipedia.org/wiki/Row_of_Bombs
+https://en.wikipedia.org/wiki/Bomb_%28symbol%29
 
 Written by Jamie Zawinski; 1998.
  </_description>

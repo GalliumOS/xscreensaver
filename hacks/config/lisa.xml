@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=AUbAuARmlnE"/>
+
   <hgroup>
    <vgroup>
     <number id="delay" type="slider" arg="-delay %"
@@ -41,7 +43,7 @@ version 5.08.
 
 Lissajous loops.
 
-http://en.wikipedia.org/wiki/Lissajous_curve
+https://en.wikipedia.org/wiki/Lissajous_curve
 
 Written by Caleb Cullen; 1997.
   </_description>

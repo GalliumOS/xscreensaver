@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=gYb-3EErLJE"/>
+
   <number id="delay" type="slider" arg="-delay %"
           _label="Frame rate" _low-label="Low" _high-label="High"
           low="0" high="100000" default="30000"
@@ -189,10 +191,10 @@
 The 75 uniform polyhedra and their duals, plus 5 prisms
 and antiprisms, and some information about each.
 
-http://en.wikipedia.org/wiki/Uniform_polyhedra
-http://en.wikipedia.org/wiki/Stellation
-http://en.wikipedia.org/wiki/Dual_polyhedron
-http://en.wikipedia.org/wiki/Antiprism
+https://en.wikipedia.org/wiki/Uniform_polyhedra
+https://en.wikipedia.org/wiki/Stellation
+https://en.wikipedia.org/wiki/Dual_polyhedron
+https://en.wikipedia.org/wiki/Antiprism
 
 Written by Dr. Zvi Har'El and Jamie Zawinski; 2004.
   </_description>

@@ -9,7 +9,7 @@ Files: *
 Copyright: 1991-2008 Jamie Zawinski <jwz@jwz.org>
            1985-1990 Dan Heller <argv@danheller.com>
            2000 Joe Keane
-License: Other
+License: Other_1
  Permission to use, copy, modify, distribute, and sell this software and its
  documentation for any purpose is hereby granted without fee, provided that
  the above copyright notice appear in all copies and that both that
@@ -20,7 +20,7 @@ License: Other
 
 Files: hacks/flame.* hacks/bouboule.* hacks/hopalong.*
 Copyright: © 1988-1991 Patrick J. Naughton
-License: Other
+License: Other_2
  Permission to use, copy, modify, and distribute this software and its
  documentation for any purpose and without fee is hereby granted,
  provided that the above copyright notice appear in all copies and that
@@ -96,7 +96,7 @@ Copyright: 2003 Trevor Blackwell <tlb@tlb.org>
            2002 Tyler Pierce
            Jeremy English <jhe@jeremyenglish.org>
            1994 Carnegie Mellon University
-License: Other
+License: Other_3
  Permission to use, copy, modify, distribute, and sell this software and its
  documentation for any purpose is hereby granted without fee, provided that
  the above copyright notice appear in all copies and that both that copyright
@@ -146,7 +146,7 @@ Copyright: 1996-2002 Alexander Jolk <ub9x@rz.uni-karlsruhe.de>
            1997 Tracy Camp <campt@hurrah.com>
            1993 Greg Bowering
            1994 Darrick Brown
-License: Other
+License: Other_4
  Permission to use, copy, modify, and distribute this software and its
  documentation for any purpose and without fee is hereby granted,
  provided that the above copyright notice appear in all copies and that
@@ -161,7 +161,7 @@ License: Other
 
 Files: hacks/munch.*
 Copyright: © 1997 Tim Showalter
-License: Other
+License: Other_5
  Permission is granted to copy, modify, and use this as long
  as this notice remains intact.  No warranties are expressed or implied.
  CMU Sucks.
@@ -195,7 +195,7 @@ License: X11
 
 Files: hacks/crystal.*
 Copyright: © 1997 Jouk Jansen <joukj@crys.chem.uva.nl>
-License: Other
+License: Other_6
  Permission to use, copy, modify, and distribute this software and its
  documentation for any purpose and without fee is hereby granted,
  provided that the above copyright notice appear in all copies and that
@@ -214,7 +214,7 @@ License: Other
 
 Files: hacks/maze.* hacks/sphere.*
 Copyright: © 1988 Sun Microsystems
-License: Other
+License: Other_7
  Permission to use, copy, modify, and distribute this software and its
  documentation for any purpose and without fee is hereby granted,
  provided that the above copyright notice appear in all copies and that
@@ -257,7 +257,7 @@ License: GPL-2+
 
 Files: hacks/glx/glut*
 Copyright: © 1989-1995 Mark J. Kilgard
-License: Other
+License: Other_8
  This program is freely distributable without licensing fees
  and is provided without guarantee or warrantee expressed or
  implied. This program is -not- in the public domain.

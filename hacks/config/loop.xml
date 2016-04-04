@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=_kTMO7oEN8U"/>
+
   <number id="delay" type="slider" arg="-delay %"
           _label="Frame rate" _low-label="Low" _high-label="High"
           low="0" high="200000" default="100000"
@@ -28,7 +30,7 @@
 A cellular automaton that generates loop-shaped colonies that spawn,
 age, and eventually die.
 
-http://en.wikipedia.org/wiki/Langton%27s_loops
+https://en.wikipedia.org/wiki/Langton%27s_loops
 
 Written by David Bagley; 1999.
   </_description>

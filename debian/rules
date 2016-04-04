@@ -52,6 +52,7 @@ build-stamp:
 		--with-hackdir=/usr/lib/xscreensaver \
 		--with-configdir=/usr/share/xscreensaver/config \
 		--mandir=/usr/share/man --with-login-manager \
+		--with-x-app-defaults=/etc/X11/app-defaults \
 		--with-proc-interrupts
 	cp driver/XScreenSaver.ad driver/XScreenSaver.ad-nogl
 	# Configure for xscreensaver-gl
@@ -62,6 +63,7 @@ build-stamp:
 		--with-hackdir=/usr/lib/xscreensaver \
 		--with-configdir=/usr/share/xscreensaver/config \
 		--mandir=/usr/share/man --with-login-manager \
+		--with-x-app-defaults=/etc/X11/app-defaults \
 		--with-proc-interrupts
 	$(MAKE) 
 	touch build-stamp

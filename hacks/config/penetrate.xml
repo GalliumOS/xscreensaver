@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=iuutzMOVYgI"/>
+
   <number id="bgrowth" type="slider" arg="-bgrowth %"
           _label="Explosions" _low-label="Slow" _high-label="Fast"
           low="1" high="20" default="5"/>
@@ -25,7 +27,7 @@
   <_description>
 Simulates (something like) the classic arcade game Missile Command.
 
-http://en.wikipedia.org/wiki/Missile_Command
+https://en.wikipedia.org/wiki/Missile_Command
 
 Written by Adam Miller; 1999.
   </_description>

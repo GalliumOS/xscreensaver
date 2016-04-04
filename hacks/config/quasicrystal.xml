@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=JsGf65d5TfM"/>
+
   <hgroup>
    <vgroup>
     <number id="delay" type="slider" arg="-delay %"
@@ -46,7 +48,7 @@ or random.
 
 See also the "RD-Bomb", "CWaves" and "Penrose" screen savers.
 
-http://en.wikipedia.org/wiki/Quasicrystal
+https://en.wikipedia.org/wiki/Quasicrystal
 
 Written by Jamie Zawinski; 2013.
   </_description>

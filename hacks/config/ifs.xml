@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=0uOIrVFsECM"/>
+
   <number id="delay" type="slider" arg="-delay %"
     _label="Frame rate" _low-label="Low" _high-label="High"
     low="0" high="100000" default="20000"
@@ -56,7 +58,7 @@ Clouds of iterated function systems spin and collide.
 Note that the "Detail" parameter is exponential.  Number of points
 drawn is functions^detail.
 
-http://en.wikipedia.org/wiki/Iterated_function_system
+https://en.wikipedia.org/wiki/Iterated_function_system
 
 Written by Chris Le Sueur and Robby Griffin; 1997.
   </_description>

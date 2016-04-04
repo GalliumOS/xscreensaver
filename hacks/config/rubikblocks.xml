@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=B2sGaRLWz-A"/>
+
   <hgroup>
    <vgroup>
 
@@ -58,7 +60,7 @@
 The "Rubik's Mirror Blocks" puzzle.
 See also the "Rubik", "Cube21", and "GLSnake" screen savers.
 
-http://en.wikipedia.org/wiki/Combination_puzzles#Irregular_cuboids
+https://en.wikipedia.org/wiki/Combination_puzzles#Irregular_cuboids
 
 Written by Vasek Potocek; 2009.
   </_description>

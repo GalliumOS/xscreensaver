@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=XWCeQqzNavY"/>
+
   <number id="delay" type="slider" arg="-subdelay %"
           _label="Frame rate" _low-label="Low" _high-label="High"
           low="0" high="100000" default="20000"
@@ -23,7 +25,7 @@
   <_description>
 Simulates that pen-in-nested-plastic-gears toy from your childhood.
 
-http://en.wikipedia.org/wiki/Spirograph
+https://en.wikipedia.org/wiki/Spirograph
 
 Written by Rohit Singh; 2000.
   </_description>

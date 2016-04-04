@@ -1,4 +1,4 @@
-/* xscreensaver, Copyright (c) 2002-2014 Jamie Zawinski <jwz@jwz.org>
+/* xscreensaver, Copyright (c) 2002-2015 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -302,6 +302,18 @@ open_file (state *st)
 #endif
 
 
+/* "The brk and sbrk functions are historical curiosities left over
+   from earlier days before the advent of virtual memory management."
+      -- sbrk(2) man page on BSD systems, as of 1995 or so.
+ */
+#ifdef HAVE_SBRK
+# if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2)) /* gcc >= 4.2 */
+   /* Don't print "warning: 'sbrk' is deprecated". */
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+# endif
+#endif
+
+
 static unsigned int
 more_bits (state *st, scroller *sc)
 {
@@ -345,13 +357,6 @@ more_bits (state *st, scroller *sc)
         sc->data = lomem;
 
 # ifdef HAVE_SBRK  /* re-get it each time through */
-      /* "The brk and sbrk functions are historical curiosities left over
-         from earlier days before the advent of virtual memory management."
-            -- sbrk(2) man page on MacOS
-       */
-#  if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2)) /* gcc >= 4.2 */
-#   pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#  endif
       himem = ((unsigned char *) sbrk(0)) - (2 * sizeof(void *));
 # endif
 
@@ -621,7 +626,7 @@ static const char *memscroller_defaults [] = {
   ".foreground:		   #00FF00",
   "*borderSize:		   2",
 
-#if defined(HAVE_COCOA) && !defined(USE_IPHONE)
+#if defined(HAVE_COCOA)
   ".font1:		   OCR A Std 192, Lucida Console 192, Monaco 192",
   ".font2:		   OCR A Std 144, Lucida Console 144, Monaco 144",
   ".font3:		   OCR A Std 128, Lucida Console 128, Monaco 128",

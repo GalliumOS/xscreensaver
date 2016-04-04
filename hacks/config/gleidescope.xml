@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=q6F-CDX6-tU"/>
+
   <number id="delay" type="slider" arg="-delay %"
           _label="Frame rate" _low-label="Low" _high-label="High"
           low="0" high="100000" default="20000"
@@ -32,7 +34,7 @@
   <_description>
 A kaleidoscope that operates on a loaded image.
 
-http://en.wikipedia.org/wiki/Kaleidoscope
+https://en.wikipedia.org/wiki/Kaleidoscope
 
 Written by Andrew Dean; 2003.
   </_description>

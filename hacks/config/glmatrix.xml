@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=_dktSpsaCPg"/>
+
   <number id="delay" type="slider" arg="-delay %"
           _label="Frame rate" _low-label="Low" _high-label="High"
           low="0" high="100000" default="30000"
@@ -44,7 +46,7 @@ The 3D "digital rain" effect, as seen in the title sequence of "The Matrix".
 See also "xmatrix" for a 2D rendering of the similar effect that
 appeared on the computer monitors actually *in* the movie.
 
-http://en.wikipedia.org/wiki/Matrix_digital_rain
+https://en.wikipedia.org/wiki/Matrix_digital_rain
 
 Written by Jamie Zawinski; 2003.
   </_description>

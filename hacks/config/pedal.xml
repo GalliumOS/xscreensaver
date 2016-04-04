@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=VFibXcP1JH0"/>
+
   <number id="delay" type="slider" arg="-delay %"
           _label="Duration" _low-label="1 second" _high-label="1 minute"
           low="1" high="60" default="5"/>
@@ -23,8 +25,8 @@
   <_description>
 The even-odd winding rule.
 
-http://en.wikipedia.org/wiki/Even-odd_rule
-http://en.wikipedia.org/wiki/Nonzero-rule
+https://en.wikipedia.org/wiki/Even-odd_rule
+https://en.wikipedia.org/wiki/Nonzero-rule
 
 Written by Dale Moore; 1995.
   </_description>

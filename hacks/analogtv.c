@@ -59,12 +59,18 @@
   Fixed a bug or two.
 */
 
+/* 2015-02-27, Tomasz Sulej <tomeksul@gmail.com>:
+   - tint_control variable is used now
+   - removed unusable hashnoise code
+ */
+
 #ifdef HAVE_COCOA
 # include "jwxyz.h"
 #else /* !HAVE_COCOA */
 # include <X11/Xlib.h>
 # include <X11/Xutil.h>
 #endif
+#include <limits.h>
 
 #include <assert.h>
 #include <errno.h>
@@ -791,11 +797,8 @@ analogtv_ntsc_to_yiq(const analogtv *it, int lineno, const float *signal,
     colormode = (cb_i * cb_i + cb_q * cb_q) > 2.8;
 
     if (colormode) {
-      double tint_i = -cos((103 + it->color_control)*3.1415926/180);
-      double tint_q = sin((103 + it->color_control)*3.1415926/180);
-
-      multiq2[0] = (cb_i*tint_i - cb_q*tint_q) * it->color_control;
-      multiq2[1] = (cb_q*tint_i + cb_i*tint_q) * it->color_control;
+      multiq2[0] = (cb_i*it->tint_i - cb_q*it->tint_q) * it->color_control;
+      multiq2[1] = (cb_q*it->tint_i + cb_i*it->tint_q) * it->color_control;
       multiq2[2]=-multiq2[0];
       multiq2[3]=-multiq2[1];
     }
@@ -907,7 +910,7 @@ analogtv_setup_teletext(analogtv_input *input)
 void
 analogtv_setup_frame(analogtv *it)
 {
-  int i,x,y;
+  /*  int i,x,y;*/
 
   it->redraw_all=0;
 
@@ -919,10 +922,13 @@ analogtv_setup_frame(analogtv *it)
       ((int)(random()&0xff)-0x80) * 0.000001;
   }
 
+  /* it wasn't used
   for (i=0; i<ANALOGTV_V; i++) {
     it->hashnoise_times[i]=0;
   }
+  */
 
+  /* let's leave it to process shrinkpulse */
   if (it->hashnoise_enable && !it->hashnoise_on) {
     if (random()%10000==0) {
       it->hashnoise_on=1;
@@ -932,6 +938,8 @@ analogtv_setup_frame(analogtv *it)
   if (random()%1000==0) {
     it->hashnoise_on=0;
   }
+
+#if 0  /* never used */
   if (it->hashnoise_on) {
     it->hashnoise_rpm += (15000.0 - it->hashnoise_rpm)*0.05 +
       ((int)(random()%2000)-1000)*0.1;
@@ -941,11 +949,13 @@ analogtv_setup_frame(analogtv *it)
   }
   if (it->hashnoise_rpm > 0.0) {
     int hni;
+    double hni_double;
     int hnc=it->hashnoise_counter; /* in 24.8 format */
 
     /* Convert rpm of a 16-pole motor into dots in 24.8 format */
-    hni = (int)(ANALOGTV_V * ANALOGTV_H * 256.0 /
-                (it->hashnoise_rpm * 16.0 / 60.0 / 60.0));
+    hni_double = ANALOGTV_V * ANALOGTV_H * 256.0 /
+                (it->hashnoise_rpm * 16.0 / 60.0 / 60.0);
+    hni = (hni_double <= INT_MAX) ? (int)hni_double : INT_MAX;
 
     while (hnc < (ANALOGTV_V * ANALOGTV_H)<<8) {
       y=(hnc>>8)/ANALOGTV_H;
@@ -954,10 +964,18 @@ analogtv_setup_frame(analogtv *it)
       if (x>0 && x<ANALOGTV_H - ANALOGTV_HASHNOISE_LEN) {
         it->hashnoise_times[y]=x;
       }
-      hnc += hni + (int)(random()%65536)-32768;
+      /* hnc += hni + (int)(random()%65536)-32768; */
+      {
+        hnc += (int)(random()%65536)-32768;
+        if ((hnc >= 0) && (INT_MAX - hnc < hni)) break;
+        hnc += hni;
+      }
     }
-/*    hnc -= (ANALOGTV_V * ANALOGTV_H)<<8;*/
   }
+#endif /* 0 */
+
+/*    hnc -= (ANALOGTV_V * ANALOGTV_H)<<8;*/
+
 
   if (it->rx_signal_level != 0.0)
     it->agclevel = 1.0/it->rx_signal_level;
@@ -1195,14 +1213,17 @@ static void analogtv_init_signal(const analogtv *it, double noiselevel, unsigned
   float *pe=it->rx_signal + end;
   float *p=ps;
   unsigned int fastrnd=rnd_seek(FASTRND_A, FASTRND_C, it->random0, start);
+  unsigned int fastrnd_offset;
   float nm1,nm2;
   float noisemul = sqrt(noiselevel*150)/(float)0x7fffffff;
 
-  nm1 = ((int)fastrnd-(int)0x7fffffff) * noisemul;
+  fastrnd_offset = fastrnd - 0x7fffffff;
+  nm1 = (fastrnd_offset <= INT_MAX ? (int)fastrnd_offset : -1 - (int)(UINT_MAX - fastrnd_offset)) * noisemul;
   while (p != pe) {
     nm2=nm1;
     fastrnd = (fastrnd*FASTRND_A+FASTRND_C) & 0xffffffffu;
-    nm1 = ((int)fastrnd-(int)0x7fffffff) * noisemul;
+    fastrnd_offset = fastrnd - 0x7fffffff;
+    nm1 = (fastrnd_offset <= INT_MAX ? (int)fastrnd_offset : -1 - (int)(UINT_MAX - fastrnd_offset)) * noisemul;
     *p++ = nm1*nm2;
   }
 }
@@ -1243,7 +1264,8 @@ static void analogtv_add_signal(const analogtv *it, const analogtv_reception *re
     */
 
     float sig0=(float)s[0];
-    float noise = ((int)fastrnd-(int)0x7fffffff) * (50.0f/(float)0x7fffffff);
+    unsigned int fastrnd_offset = fastrnd - 0x7fffffff;
+    float noise = (fastrnd_offset <= INT_MAX ? (int)fastrnd_offset : -1 - (int)(UINT_MAX - fastrnd_offset)) * (50.0f/(float)0x7fffffff);
     fastrnd = (fastrnd*FASTRND_A+FASTRND_C) & 0xffffffffu;
 
     p[0] += sig0 * level * (1.0f - noise_ampl) + noise * noise_ampl;
@@ -1727,7 +1749,7 @@ analogtv_draw(analogtv *it, double noiselevel,
               const analogtv_reception *const *recs, unsigned rec_count)
 {
   int i,lineno;
-  int /*bigloadchange,*/drawcount;
+  /*  int bigloadchange,drawcount;*/
   double baseload;
   int overall_top, overall_bot;
 
@@ -1782,14 +1804,18 @@ analogtv_draw(analogtv *it, double noiselevel,
   baseload=0.5;
   /* if (it->hashnoise_on) baseload=0.5; */
 
-  /*bigloadchange=1;*/
-  drawcount=0;
+  /*bigloadchange=1;
+    drawcount=0;*/
   it->crtload[ANALOGTV_TOP-1]=baseload;
   it->puheight = puramp(it, 2.0, 1.0, 1.3) * it->height_control *
     (1.125 - 0.125*puramp(it, 2.0, 2.0, 1.1));
 
   analogtv_setup_levels(it, it->puheight * (double)it->useheight/(double)ANALOGTV_VISLINES);
 
+  /* calculate tint once per frame */
+  it->tint_i = -cos((103 + it->tint_control)*3.1415926/180);
+  it->tint_q = sin((103 + it->tint_control)*3.1415926/180);
+  
   for (lineno=ANALOGTV_TOP; lineno<ANALOGTV_BOT; lineno++) {
     int slineno, ytop, ybot;
     unsigned signal_offset;
@@ -1815,7 +1841,7 @@ analogtv_draw(analogtv *it, double noiselevel,
     }
     it->onscreen_signature[lineno] = linesig;
 #endif
-    drawcount++;
+    /*    drawcount++;*/
 
     /*
       Interpolate the 600-dotclock line into however many horizontal

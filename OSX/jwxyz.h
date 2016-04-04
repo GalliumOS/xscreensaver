@@ -1,4 +1,4 @@
-/* xscreensaver, Copyright (c) 1991-2014 Jamie Zawinski <jwz@jwz.org>
+/* xscreensaver, Copyright (c) 1991-2015 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -29,6 +29,7 @@ typedef unsigned long Time;
 typedef unsigned int KeySym;
 typedef unsigned int KeyCode;
 typedef unsigned int VisualID;
+typedef unsigned long Atom; /* Must be as large as a char *. */
 
 typedef struct jwxyz_Display		Display;
 typedef struct jwxyz_Screen		Screen;
@@ -46,11 +47,14 @@ typedef struct jwxyz_XWindowAttributes	XWindowAttributes;
 typedef struct jwxyz_XrmOptionDescRec	XrmOptionDescRec;
 typedef struct jwxyz_XrmDatabase *      XrmDatabase;
 typedef struct jwxyz_XImage		XImage;
+typedef struct jwxyz_XFontProp          XFontProp;
 typedef struct jwxyz_XFontStruct	XFontStruct;
 typedef struct jwxyz_Font *		Font;
+typedef struct jwxyz_XFontSet *		XFontSet;
 typedef struct jwxyz_XCharStruct	XCharStruct;
 typedef struct jwxyz_XComposeStatus	XComposeStatus;
 typedef struct jwxyz_XPixmapFormatValues XPixmapFormatValues;
+typedef struct jwxyz_XChar2b            XChar2b;
 
 typedef union  jwxyz_XEvent		XEvent;
 typedef struct jwxyz_XAnyEvent		XAnyEvent;
@@ -231,6 +235,20 @@ typedef unsigned long			XtInputMask;
 #define XK_End			0xFF57
 #define XK_Begin		0xFF58
 
+#define XK_F1			0xFFBE
+#define XK_F2			0xFFBF
+#define XK_F3			0xFFC0
+#define XK_F4			0xFFC1
+#define XK_F5			0xFFC2
+#define XK_F6			0xFFC3
+#define XK_F7			0xFFC4
+#define XK_F8			0xFFC5
+#define XK_F9			0xFFC6
+#define XK_F10			0xFFC7
+#define XK_F11			0xFFC8
+#define XK_F12			0xFFC9
+
+
 #define GXclear			0x0		/* 0 */
 #define GXand			0x1		/* src AND dst */
 // #define GXandReverse		0x2		/* src AND NOT dst */
@@ -248,12 +266,14 @@ typedef unsigned long			XtInputMask;
 // #define GXnand		0xe		/* NOT src OR NOT dst */
 #define GXset			0xf		/* 1 */
 
+#define XA_FONT                 18
+
 #define DefaultScreen(dpy) (0)
-#define BlackPixelOfScreen(s) (0xFF000000)
-#define WhitePixelOfScreen(s) (0xFFFFFFFF)
-#define BlackPixel(dpy,n) BlackPixelOfScreen(0)
-#define WhitePixel(dpy,n) WhitePixelOfScreen(0)
-#define CellsOfScreen(s) (0x00FFFFFF)
+#define BlackPixelOfScreen XBlackPixelOfScreen
+#define WhitePixelOfScreen XWhitePixelOfScreen
+#define BlackPixel(dpy,n) BlackPixelOfScreen(ScreenOfDisplay(dpy,n))
+#define WhitePixel(dpy,n) WhitePixelOfScreen(ScreenOfDisplay(dpy,n))
+#define CellsOfScreen XCellsOfScreen
 #define XFree(x) free(x)
 #define BitmapPad(dpy) (8)
 #define BitmapBitOrder(dpy) (MSBFirst)
@@ -289,6 +309,10 @@ extern int XDisplayNumberOfScreen (Screen *);
 extern int XScreenNumberOfScreen (Screen *);
 extern int XDisplayWidth (Display *, int);
 extern int XDisplayHeight (Display *, int);
+
+unsigned long XBlackPixelOfScreen(Screen *);
+unsigned long XWhitePixelOfScreen(Screen *);
+unsigned long XCellsOfScreen(Screen *);
 
 extern int XDrawPoint (Display *, Drawable, GC, int x, int y);
 extern int XDrawPoints (Display *, Drawable, GC, XPoint *, int n, int mode);
@@ -365,6 +389,8 @@ extern int XDrawString (Display *, Drawable, GC, int x, int y, const char *,
                         int len);
 extern int XDrawImageString (Display *, Drawable, GC, int x, int y, 
                              const char *, int len);
+extern int XDrawString16 (Display *, Drawable, GC, int x, int y,
+                          const XChar2b *, int len);
 
 extern Bool XQueryPointer (Display *, Window, Window *root_ret,
                            Window *child_ret,
@@ -420,13 +446,32 @@ extern int XUnloadFont (Display *, Font);
 extern int XTextExtents (XFontStruct *, const char *, int length,
                          int *dir_ret, int *ascent_ret, int *descent_ret,
                          XCharStruct *overall_ret);
+extern char * jwxyz_unicode_character_name (Font, unsigned long uc);
+extern int XTextExtents16 (XFontStruct *, const XChar2b *, int length,
+                           int *dir_ret, int *ascent_ret, int *descent_ret,
+                           XCharStruct *overall_ret);
 extern int XTextWidth (XFontStruct *, const char *, int length);
 extern int XSetFont (Display *, GC, Font);
+
+extern XFontSet XCreateFontSet (Display *, char *name, 
+                                char ***missing_charset_list_return,
+                                int *missing_charset_count_return,
+                                char **def_string_return);
+extern void XFreeFontSet (Display *, XFontSet);
+extern void XFreeStringList (char **);
+extern int Xutf8TextExtents (XFontSet, const char *, int num_bytes,
+                             XRectangle *overall_ink_return,
+                             XRectangle *overall_logical_return);
+extern void Xutf8DrawString (Display *, Drawable, XFontSet, GC,
+                             int x, int y, const char *, int num_bytes);
+extern const char *jwxyz_nativeFontName (Font, float *size);
 
 extern Pixmap XCreatePixmap (Display *, Drawable,
                              unsigned int width, unsigned int height,
                              unsigned int depth);
 extern int XFreePixmap (Display *, Pixmap);
+
+extern char *XGetAtomName (Display *, Atom);
 
 // Xt timers and fds
 extern XtAppContext XtDisplayToApplicationContext (Display *);
@@ -453,6 +498,7 @@ extern int visual_depth (Screen *, Visual *);
 extern int visual_cells (Screen *, Visual *);
 extern int visual_class (Screen *, Visual *);
 extern int get_bits_per_pixel (Display *, int);
+extern int screen_number (Screen *);
 
 // also declared in utils/grabclient.h
 extern Bool use_subwindow_mode_p (Screen *, Window);
@@ -695,14 +741,19 @@ struct jwxyz_XImage {
 };
 
 struct jwxyz_XCharStruct {
-  short	lbearing;	/* origin to left edge of raster */
-  short	rbearing;	/* origin to right edge of raster */
+  short	lbearing;	/* origin to left edge of ink */
+  short	rbearing;	/* origin to right edge of ink */
   short	width;		/* advance to next char's origin */
-  short	ascent;		/* baseline to top edge of raster */
-  short	descent;	/* baseline to bottom edge of raster */
+  short	ascent;		/* baseline to top edge of ink */
+  short	descent;	/* baseline to bottom edge of ink */
 #if 0
   unsigned short attributes;	/* per char flags (not predefined) */
 #endif
+};
+
+struct jwxyz_XFontProp {
+  Atom          name;
+  unsigned long card32; /* Careful: This holds (32- or 64-bit) pointers. */
 };
 
 struct jwxyz_XFontStruct {
@@ -721,10 +772,8 @@ struct jwxyz_XFontStruct {
   Bool	all_chars_exist;	/* flag if all characters have non-zero size*/
 #endif
   unsigned	default_char;	/* char to print for undefined character */
-#if 0
   int         n_properties;   /* how many properties there are */
   XFontProp	*properties;	/* pointer to array of additional properties*/
-#endif
   XCharStruct	min_bounds;	/* minimum bounds over all existing char*/
   XCharStruct	max_bounds;	/* maximum bounds over all existing char*/
   XCharStruct	*per_char;	/* first_char to last_char information */
@@ -740,6 +789,11 @@ struct  jwxyz_XPixmapFormatValues {
   int depth;
   int bits_per_pixel;
   int scanline_pad;
+};
+
+struct jwxyz_XChar2b {
+  unsigned char byte1;
+  unsigned char byte2;
 };
 
 #endif /* __JWXYZ_H__ */

@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=uKNE4xCdlno"/>
+
   <hgroup>
    <vgroup>
    <number id="delay" type="slider" arg="-delay %"
@@ -45,7 +47,7 @@
 A variant on a "fifteen puzzle", operating on the screen or an image.
 It divides the image into a grid and randomly shuffles the squares.
 
-http://en.wikipedia.org/wiki/Fifteen_puzzle
+https://en.wikipedia.org/wiki/Fifteen_puzzle
 
 Written by Jamie Zawinski; 1994.
   </_description>

@@ -1,8 +1,8 @@
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
---- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:49:02.000000000 +0200
-+++ xscreensaver/driver/XScreenSaver.ad.in	2014-10-07 22:49:02.000000000 +0200
-@@ -262,7 +262,6 @@
+--- xscreensaver.orig/driver/XScreenSaver.ad.in	2015-07-19 11:29:38.000000000 +0200
++++ xscreensaver/driver/XScreenSaver.ad.in	2015-07-19 11:29:38.000000000 +0200
+@@ -263,7 +263,6 @@
  				xspirograph -root			    \n\
  @GL_KLUDGE@ GL: 				circuit -root				    \n\
  @GL_KLUDGE@ GL: 				dangerball -root			    \n\

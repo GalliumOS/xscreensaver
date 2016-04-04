@@ -4,6 +4,8 @@
 
   <command arg="-root"/>
 
+  <video href="http://www.youtube.com/watch?v=tOLzz_D4-0E"/>
+
   <hgroup>
     <vgroup>
       <number id="delay" type="slider" arg="-delay %"
@@ -66,9 +68,9 @@ eight cubes, each touching six others.  To make it easier to
 visualize the rotation, it uses a different color for the edges of
 each face.  Don't think about it too long, or your brain will melt.
 
-http://en.wikipedia.org/wiki/Hypercube
-http://en.wikipedia.org/wiki/Tesseract
-http://en.wikipedia.org/wiki/Regular_polytope
+https://en.wikipedia.org/wiki/Hypercube
+https://en.wikipedia.org/wiki/Tesseract
+https://en.wikipedia.org/wiki/Regular_polytope
 
 Written by Joe Keane, Fritz Mueller, and Jamie Zawinski; 1992.
   </_description>
