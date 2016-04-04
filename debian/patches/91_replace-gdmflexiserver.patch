@@ -12,7 +12,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  ! @NEW_LOGIN_COMMAND_P@*newLoginCommand:	@NEW_LOGIN_COMMAND@
  ! Debian: Hard-wire the command in case the build machine does not have gdm
 -*newLoginCommand:	gdmflexiserver -ls
-+*newLoginCommand:	lxdm -c USER_SWITCH
++*newLoginCommand:	dm-tool switch-to-greeter
  
  
  ! Turning on "installColormap" on 8-bit systems interacts erratically with
@@ -23,7 +23,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
  with_login_manager_req=unspecified
 -default_login_manager_1='gdmflexiserver -ls'
-+default_login_manager_1='lxdm -c USER_SWITCH'
++default_login_manager_1='dm-tool switch-to-greeter'
  default_login_manager_2='kdmctl reserve'
  
  
@@ -34,7 +34,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
  with_login_manager_req=unspecified
 -default_login_manager_1='gdmflexiserver -ls'
-+default_login_manager_1='lxdm -c USER_SWITCH'
++default_login_manager_1='dm-tool switch-to-greeter'
  default_login_manager_2='kdmctl reserve'
  
  AC_ARG_WITH(login-manager,
