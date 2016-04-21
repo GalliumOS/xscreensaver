@@ -1,3 +1,11 @@
+xscreensaver (5.34-2ubuntu1-galliumos1) xenon; urgency=medium
+
+  * Re-apply GalliumOS patches
+    - modify newLoginCommand in 53_default_newLoginCommand.patch
+    - copy xscreensaver.pam from SLiM to fix issue with ecryptfs not mounting homedir on unlock
+
+ -- reynhout <reynhout@galliumos.org>  Thu, 21 Apr 2016 21:01:58 +0000
+
 xscreensaver (5.34-2ubuntu1) xenial; urgency=medium
 
   * Merge from Debian unstable. Remaining changes: (Really fix LP: #1406825)
