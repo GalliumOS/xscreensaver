@@ -1,9 +1,32 @@
-xscreensaver (5.34-1ubuntu1-galliumos1) xenial; urgency=medium
+xscreensaver (5.34-2ubuntu1) xenial; urgency=medium
 
-  * Changed the xscreensaver pam file to fix an issue with ecryptfs
-  * Changed the new login command for lxdm
+  * Merge from Debian unstable. Remaining changes: (Really fix LP: #1406825)
+    - debian/control:
+      + Breaks/Replaces: the old changes are not needed anymore, but the
+        new changes the screensavers sets needs it.
+    - debian/rules:
+      + Use /usr/share/backgrounds as image directory.
+      + Add translation domain to .desktop files.
+    - debian/source_xscreensaver.py:
+      + Add apport hook.
+    - debian/xscreensaver.dirs:
+      + Install /usr/share/backgrounds. By default, settings search in
+        /usr/share/backgrounds and without it, it displays an error.
+    - debian/patch/90_ubuntu-branding.patch: Use Ubuntu branding.
+    - debian/patches/60_sequential_glslideshow.patch:
+      + Allow going through images sequentially rather than just at random in
+        the GLSlideshow hack.
 
- -- Hugh Greenberg <hugh@galliumos.org>  Thu, 10 Mar 2016 20:23:19 -0400
+ -- Unit 193 <unit193@ubuntu.com>  Wed, 06 Apr 2016 17:26:23 -0400
+
+xscreensaver (5.34-2) unstable; urgency=medium
+
+  * Fix sort order in hacks/Makefile (for reproducible builds)
+    (Closes: #819595)
+  * Disable Easter egg about "outdated" version
+    (Closes: #819703)
+
+ -- Tormod Volden <debian.tormod@gmail.com>  Tue, 05 Apr 2016 22:53:13 +0200
 
 xscreensaver (5.34-1ubuntu1) xenial; urgency=medium
 

@@ -1,0 +1,13 @@
+--- a/hacks/Makefile.in
++++ b/hacks/Makefile.in
+@@ -854,8 +854,8 @@
+ 
+ m6502.h:
+ 	@echo "building m6502.h from $(srcdir)/images/m6502/*.asm"; \
+-	UTILS_SRC="$(UTILS_SRC)" \
+-	$(srcdir)/m6502.sh m6502.h $(srcdir)/images/m6502/*.asm
++	find $(srcdir)/images/m6502/ -name '*.asm' | LC_ALL=C sort | \
++	  UTILS_SRC="$(UTILS_SRC)" xargs $(srcdir)/m6502.sh m6502.h
+ 
+ m6502.o:	m6502.h
+ m6502:		m6502.o		asm6502.o $(HACK_OBJS) $(ATV)

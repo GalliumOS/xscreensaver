@@ -1,0 +1,14 @@
+Index: xscreensaver-5.30/driver/prefs.c
+===================================================================
+--- xscreensaver-5.30.orig/driver/prefs.c	2014-08-08 19:57:20.000000000 +0200
++++ xscreensaver-5.30/driver/prefs.c	2016-04-05 22:06:22.991049607 +0200
+@@ -1706,6 +1706,9 @@
+ 
+      jwz, 2014
+   */
++
++  return 0;
++
+   time_t now = time ((time_t *) 0);				/*   N   */
+   struct tm *tm = localtime (&now);				/*   o   */
+   const char *s = screensaver_id;				/*       */
