@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=RaverHoop
+Exec=/usr/lib/xscreensaver/raverhoop -root
+TryExec=/usr/lib/xscreensaver/raverhoop
+Comment=Simulates an LED hula hoop in a dark room. Oontz oontz oontz. Written by Jamie Zawinski.

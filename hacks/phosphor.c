@@ -1,4 +1,4 @@
-/* xscreensaver, Copyright (c) 1999-2014 Jamie Zawinski <jwz@jwz.org>
+/* xscreensaver, Copyright (c) 1999-2016 Jamie Zawinski <jwz@jwz.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -17,7 +17,7 @@
 # include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#ifndef HAVE_COCOA
+#ifndef HAVE_JWXYZ
 # include <X11/Intrinsic.h>
 #endif
 
@@ -78,7 +78,7 @@ typedef struct {
   int escstate;
   int csiparam[NPAR];
   int curparam;
-  int unicruds; char unicrud[7];
+  int unicruds; unsigned char unicrud[7];
 
   p_char **chars;
   p_cell *cells;
@@ -220,7 +220,7 @@ phosphor_init (Display *dpy, Window window)
   state->gcs = (GC *) calloc (sizeof(GC), state->ticks + 1);
 
   {
-    int ncolors = MAX (0, state->ticks - 3);
+    int ncolors = MAX (1, state->ticks - 3);
     XColor *colors = (XColor *) calloc (ncolors, sizeof(XColor));
     int h1, h2;
     double s1, s2, v1, v2;
@@ -426,7 +426,7 @@ capture_font_bits (p_state *state)
                            GCCapStyle | GCLineWidth),
                           &state->gcv);
 
-#ifdef HAVE_COCOA
+#ifdef HAVE_JWXYZ
   jwxyz_XSetAntiAliasing (state->dpy, state->gc0, False);
   jwxyz_XSetAntiAliasing (state->dpy, state->gc1, False);
 #endif
@@ -729,6 +729,56 @@ scroll (p_state *state)
 }
 
 
+static int
+process_unicrud (p_state *state, int c)
+{
+  if ((c & 0xE0) == 0xC0) {        /* 110xxxxx: 11 bits, 2 bytes */
+    state->unicruds = 1;
+    state->unicrud[0] = c;
+    state->escstate = 102;
+  } else if ((c & 0xF0) == 0xE0) { /* 1110xxxx: 16 bits, 3 bytes */
+    state->unicruds = 1;
+    state->unicrud[0] = c;
+    state->escstate = 103;
+  } else if ((c & 0xF8) == 0xF0) { /* 11110xxx: 21 bits, 4 bytes */
+    state->unicruds = 1;
+    state->unicrud[0] = c;
+    state->escstate = 104;
+  } else if ((c & 0xFC) == 0xF8) { /* 111110xx: 26 bits, 5 bytes */
+    state->unicruds = 1;
+    state->unicrud[0] = c;
+    state->escstate = 105;
+  } else if ((c & 0xFE) == 0xFC) { /* 1111110x: 31 bits, 6 bytes */
+    state->unicruds = 1;
+    state->unicrud[0] = c;
+    state->escstate = 106;
+  } else if (state->unicruds == 0) {
+    return c;
+  } else {
+    int total = state->escstate - 100;  /* see what I did there */
+    if (state->unicruds < total) {
+      /* Buffer more bytes of the UTF-8 sequence */
+      state->unicrud[state->unicruds++] = c;
+    }
+
+    if (state->unicruds >= total) {
+      /* Done! Convert it to Latin1 and print that. */
+      char *s;
+      state->unicrud[state->unicruds] = 0;
+      s = utf8_to_latin1 ((const char *) state->unicrud, False);
+      state->unicruds = 0;
+      state->escstate = 0;
+      if (s) {
+        c = (unsigned char) s[0];
+        free (s);
+        return c;
+      }
+    }
+  }
+  return 0;
+}
+
+
 static void
 print_char (p_state *state, int c)
 {
@@ -831,36 +881,10 @@ print_char (p_state *state, int c)
 	      break;
 	    default:
 
-              /* states 102-106 are for UTF-8 decoding */
-
-              if ((c & 0xE0) == 0xC0) {        /* 110xxxxx: 11 bits, 2 bytes */
-                state->unicruds = 1;
-                state->unicrud[0] = c;
-                state->escstate = 102;
+            PRINT: /* Come from states 102-106 */
+              c = process_unicrud (state, c);
+              if (! c)
                 break;
-              } else if ((c & 0xF0) == 0xE0) { /* 1110xxxx: 16 bits, 3 bytes */
-                state->unicruds = 1;
-                state->unicrud[0] = c;
-                state->escstate = 103;
-                break;
-              } else if ((c & 0xF8) == 0xF0) { /* 11110xxx: 21 bits, 4 bytes */
-                state->unicruds = 1;
-                state->unicrud[0] = c;
-                state->escstate = 104;
-                break;
-              } else if ((c & 0xFC) == 0xF8) { /* 111110xx: 26 bits, 5 bytes */
-                state->unicruds = 1;
-                state->unicrud[0] = c;
-                state->escstate = 105;
-                break;
-              } else if ((c & 0xFE) == 0xFC) { /* 1111110x: 31 bits, 6 bytes */
-                state->unicruds = 1;
-                state->unicrud[0] = c;
-                state->escstate = 106;
-                break;
-              }
-
-            PRINT:
 
               /* If the cursor is in column 39 and we print a character, then
                  that character shows up in column 39, and the cursor is no
@@ -1137,35 +1161,12 @@ print_char (p_state *state, int c)
 	  state->escstate = 0;
 	  break;
 
-        case 102:
+        case 102:	/* states 102-106 are for UTF-8 decoding */
         case 103:
         case 104:
         case 105:
         case 106:
-          {
-            int total = state->escstate - 100;  /* see what I did there */
-            if (state->unicruds < total) {
-              /* Buffer more bytes of the UTF-8 sequence */
-              state->unicrud[state->unicruds++] = c;
-            }
-
-            if (state->unicruds >= total) {
-              /* Done! Convert it to Latin1 and print that. */
-              char *s;
-              state->unicrud[state->unicruds] = 0;
-              s = utf8_to_latin1 ((const char *) state->unicrud, False);
-              state->unicruds = 0;
-              state->escstate = 0;
-              if (s) {
-                c = (unsigned char) s[0];
-                free (s);
-                goto PRINT;
-              } else {
-                c = 0;
-              }
-            }
-          }
-          break;
+          goto PRINT;
 
         default:
           abort();
@@ -1196,7 +1197,8 @@ print_char (p_state *state, int c)
 	}
       else
 	{
-          /* #### This should do UTF-8 decoding */
+          c = process_unicrud (state, c);
+          if (!c) return;
 
 	  cell->state = FLARE;
 	  cell->p_char = state->chars[c];

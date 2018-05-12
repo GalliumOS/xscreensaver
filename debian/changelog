@@ -1,3 +1,56 @@
+xscreensaver (5.36-1ubuntu1) zesty; urgency=medium
+
+  * Merge from Debian unstable.  Remaining changes:
+    - debian/rules:
+      + Use /usr/share/backgrounds as image directory.
+      + Add translation domain to .desktop files.
+    - debian/source_xscreensaver.py:
+      + Add apport hook.
+    - debian/xscreensaver.dirs:
+      + Install /usr/share/backgrounds. By default, settings search in
+        /usr/share/backgrounds and without it, it displays an error.
+    - debian/patch/90_ubuntu-branding.patch: Use Ubuntu branding.
+    - debian/patches/60_sequential_glslideshow.patch:
+      + Allow going through images sequentially rather than just at random in
+        the GLSlideshow hack.
+  * Dropped changes:
+    - debian/control:
+      + Breaks/Replaces: the old changes are not needed anymore, but the
+        new changes the screensavers sets needs it.
+  * d/p/90_ubuntu-branding.patch: Fix feed used for the Fridge.
+
+ -- Unit 193 <unit193@ubuntu.com>  Fri, 24 Mar 2017 17:21:10 -0400
+
+xscreensaver (5.36-1) unstable; urgency=medium
+
+  * New upstream release 5.36, changes since 5.34:
+    - New hacks (modes): `dymaxionmap', `unicrud', `energystream',
+      `raverhoop', `hydrostat', `discoball', `cubetwist', `cubestack',
+      `splodesic' and `hexstrut'.
+    - Ignore WM_USER_TIME property changes with days-old timestamps.
+    - Added Windows 10 to `bsod'.
+    - `pong' is now playable.
+    - Several new programs in `m6502'.
+    - `rotzoomer -mode circle'.
+    - Better titles in `photopile'.
+  * Replace dependencies on libjpeg-progs with libjpeg-turbo-progs
+    (Closes: #813395)
+  * debian/patches/12_upstream_hurd-no-pthread_stack_min.patch:
+    Do not check for PTHREAD_STACK_MIN on GNU/Hurd (Closes: #823049)
+  * debian/control: Updated, secure Vcs-Git and Vcs-Browser URI
+  * Bump Standards-Version to 3.9.8 (no changes needed)
+  * Bump debhelper compatibility version to 9
+  * debian/patches/20_hacks_maze_xpm_libs.patch: Deleted (obsolete)
+  * Add patch descriptions (and some bug references) to all patches
+  * debian/rules: Enable all hardening options
+  * debian/control: Remove Enhances (reverse dependencies) and obsolete
+    Breaks, Replaces and versioned dependencies (Closes: #822621)
+  * Ship /usr/lib/systemd/user/xscreensaver.service (Closes: #843610)
+  * debian/patches/75_Makefile_in-ignore-alien-platforms.patch:
+    Do not descend into OSX and android folders in make clean
+
+ -- Tormod Volden <debian.tormod@gmail.com>  Sun, 11 Dec 2016 15:18:05 +0100
+
 xscreensaver (5.34-2ubuntu1) xenial; urgency=medium
 
   * Merge from Debian unstable. Remaining changes: (Really fix LP: #1406825)
@@ -22,7 +75,7 @@ xscreensaver (5.34-2ubuntu1) xenial; urgency=medium
 xscreensaver (5.34-2) unstable; urgency=medium
 
   * Fix sort order in hacks/Makefile (for reproducible builds)
-    (Closes: #819595)
+    (Closes: #819595) Thanks to Sascha Steinbiss!
   * Disable Easter egg about "outdated" version
     (Closes: #819703)
 

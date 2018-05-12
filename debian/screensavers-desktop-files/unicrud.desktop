@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=Unicrud
+Exec=/usr/lib/xscreensaver/unicrud -root
+TryExec=/usr/lib/xscreensaver/unicrud
+Comment=Chooses a random Unicode character and displays it full screen, along with some information about it. https://en.wikipedia.org/wiki/Unicode Written by Jamie Zawinski.

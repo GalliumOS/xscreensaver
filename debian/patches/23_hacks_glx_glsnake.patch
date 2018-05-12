@@ -1,11 +1,11 @@
 # Parental Advisory :)
 # Make the titles more innocent, for the small children using Debian
 
-Index: xscreensaver/hacks/glx/glsnake.c
+Index: xscreensaver-git/hacks/glx/glsnake.c
 ===================================================================
---- xscreensaver.orig/hacks/glx/glsnake.c	2015-06-18 21:55:09.000000000 +0200
-+++ xscreensaver/hacks/glx/glsnake.c	2015-06-18 21:55:09.000000000 +0200
-@@ -536,7 +536,7 @@
+--- xscreensaver-git.orig/hacks/glx/glsnake.c	2016-05-28 19:05:49.301677806 +0200
++++ xscreensaver-git/hacks/glx/glsnake.c	2016-05-28 19:05:49.297677807 +0200
+@@ -540,7 +540,7 @@
  	PIN, ZERO, RIGHT, RIGHT, ZERO, PIN, PIN, ZERO, PIN, PIN, ZERO,
  	RIGHT, ZERO }
      },
@@ -14,7 +14,7 @@ Index: xscreensaver/hacks/glx/glsnake.c
        { RIGHT, RIGHT, PIN, RIGHT, LEFT, RIGHT, PIN, RIGHT, LEFT,
  	RIGHT, PIN, RIGHT, LEFT, RIGHT, PIN, RIGHT, LEFT, RIGHT, PIN,
  	RIGHT, LEFT, RIGHT, PIN, ZERO }
-@@ -561,22 +561,22 @@
+@@ -565,22 +565,22 @@
  	ZERO, PIN, ZERO, ZERO, ZERO, ZERO, PIN, ZERO, ZERO, ZERO, ZERO,
  	ZERO, ZERO, ZERO }
      },
@@ -41,7 +41,7 @@ Index: xscreensaver/hacks/glx/glsnake.c
        { RIGHT, ZERO, ZERO, ZERO, RIGHT, ZERO, ZERO, PIN, ZERO, ZERO,
  	LEFT, ZERO, ZERO, ZERO, LEFT, ZERO, LEFT, PIN, LEFT, PIN, RIGHT,
  	PIN, RIGHT, ZERO }
-@@ -996,7 +996,7 @@
+@@ -1000,7 +1000,7 @@
      { "Parrot",
          { ZERO, ZERO, ZERO, ZERO, RIGHT, RIGHT, ZERO, LEFT, PIN, RIGHT, ZERO, RIGHT, ZERO, RIGHT, ZERO, RIGHT, PIN, LEFT, ZERO, RIGHT, LEFT, ZERO, PIN, ZERO }
      },

@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=DymaxionMap
+Exec=/usr/lib/xscreensaver/dymaxionmap -root
+TryExec=/usr/lib/xscreensaver/dymaxionmap
+Comment=Buckminster Fuller's map of the Earth projected onto the surface of an unfolded icosahedron. It depicts the Earth's continents as one island, or nearly contiguous land masses. https://en.wikipedia.org/wiki/Dymaxion_map https://en.wikipedia.org/wiki/Buckminster_Fuller Written by Jamie Zawinski.

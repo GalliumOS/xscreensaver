@@ -1,11 +1,11 @@
 # Parental Advisory :)
 # Make the titles more innocent, for the small children using Debian
 
-Index: xscreensaver-5.04/hacks/barcode.c
+Index: xscreensaver-git/hacks/barcode.c
 ===================================================================
---- xscreensaver-5.04.orig/hacks/barcode.c	2006-04-06 08:40:32.000000000 +0200
-+++ xscreensaver-5.04/hacks/barcode.c	2007-12-08 17:46:48.000000000 +0100
-@@ -117,8 +117,6 @@
+--- xscreensaver-git.orig/hacks/barcode.c	2016-05-28 19:05:42.729678148 +0200
++++ xscreensaver-git/hacks/barcode.c	2016-05-28 19:05:42.729678148 +0200
+@@ -118,8 +118,6 @@
    "belly",
    "bliss",
    "bogosity",
@@ -14,7 +14,7 @@ Index: xscreensaver-5.04/hacks/barcode.c
    "booty",
    "bread",
    "bubba",
-@@ -131,7 +129,6 @@
+@@ -132,7 +130,6 @@
    "children",
    "chocolate",
    "CLONE",
@@ -22,7 +22,7 @@ Index: xscreensaver-5.04/hacks/barcode.c
    "constriction",
    "contrition",
    "cop",
-@@ -171,7 +168,6 @@
+@@ -172,7 +169,6 @@
    "fear",
    "fever",
    "filth",
@@ -30,7 +30,7 @@ Index: xscreensaver-5.04/hacks/barcode.c
    "fluff",
    "fnord",
    "freedom",
-@@ -188,10 +184,7 @@
+@@ -189,10 +185,7 @@
    "happiness",
    "hate",
    "helplessness",
@@ -41,7 +41,7 @@ Index: xscreensaver-5.04/hacks/barcode.c
    "hope",
    "hysteria",
    "icepick",
-@@ -265,7 +258,6 @@
+@@ -266,7 +259,6 @@
    "punishment",
    "punk rock",
    "punk",
@@ -49,7 +49,7 @@ Index: xscreensaver-5.04/hacks/barcode.c
    "quagmire",
    "quarantine",
    "quartz",
-@@ -333,8 +325,6 @@
+@@ -334,8 +326,6 @@
    "vegetarian",
    "venom",
    "verifiability",

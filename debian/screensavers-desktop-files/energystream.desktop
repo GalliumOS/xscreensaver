@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=EnergyStream
+Exec=/usr/lib/xscreensaver/energystream -root
+TryExec=/usr/lib/xscreensaver/energystream
+Comment=A flow of particles which form an energy stream. Written by Eugene Sandulenko and Konrad "Yoghurt" Zagorowicz.

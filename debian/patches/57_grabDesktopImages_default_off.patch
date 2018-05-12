@@ -1,6 +1,6 @@
-
-Bug #679974: xscreensaver-data: disable hacks that reveal the desktop
-
+#
+# Bug #679974: xscreensaver-data: disable hacks that reveal the desktop
+#
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
 --- xscreensaver.orig/driver/XScreenSaver.ad.in	2012-10-18 22:57:01.000000000 +0200

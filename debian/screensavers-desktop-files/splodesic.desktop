@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=Splodesic
+Exec=/usr/lib/xscreensaver/splodesic -root
+TryExec=/usr/lib/xscreensaver/splodesic
+Comment=A geodesic sphere experiences a series of eruptions. Written by Jamie Zawinski.

@@ -1,0 +1,8 @@
+[Unit]
+Description=XScreenSaver
+
+[Service]
+ExecStart=xscreensaver
+
+[Install]
+WantedBy=default.target

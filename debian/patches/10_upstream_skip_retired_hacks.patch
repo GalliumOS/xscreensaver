@@ -1,24 +1,24 @@
 #
 # Sent upstream (jwz) 2009-06-16
 #
-Index: xscreensaver/hacks/Makefile.in
+Index: xscreensaver-git/hacks/Makefile.in
 ===================================================================
---- xscreensaver.orig/hacks/Makefile.in	2015-07-19 11:23:04.000000000 +0200
-+++ xscreensaver/hacks/Makefile.in	2015-07-19 11:23:04.000000000 +0200
+--- xscreensaver-git.orig/hacks/Makefile.in	2016-12-11 14:23:11.356275726 +0100
++++ xscreensaver-git/hacks/Makefile.in	2016-12-11 14:23:11.352275725 +0100
 @@ -273,7 +273,7 @@
  
  
  default: all
--all: $(EXES) $(RETIRED_EXES) testx11
+-all: $(EXES) $(RETIRED_EXES)
 +all: $(EXES)
  
  install:   install-program   install-scripts install-xml install-man
  uninstall: uninstall-program uninstall-xml uninstall-man
-Index: xscreensaver/hacks/glx/Makefile.in
+Index: xscreensaver-git/hacks/glx/Makefile.in
 ===================================================================
---- xscreensaver.orig/hacks/glx/Makefile.in	2015-07-19 11:23:04.000000000 +0200
-+++ xscreensaver/hacks/glx/Makefile.in	2015-07-19 11:23:04.000000000 +0200
-@@ -252,7 +252,7 @@
+--- xscreensaver-git.orig/hacks/glx/Makefile.in	2016-12-11 14:23:11.356275726 +0100
++++ xscreensaver-git/hacks/glx/Makefile.in	2016-12-11 14:23:11.352275725 +0100
+@@ -266,7 +266,7 @@
  
  
  default: all

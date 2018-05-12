@@ -36,6 +36,7 @@
  */
 
 #include "screenhack.h"
+#include <time.h>
 
 struct state {
   Display *dpy;
@@ -329,6 +330,7 @@ decayscreen_reshape (Display *dpy, Window window, void *closure,
                  unsigned int w, unsigned int h)
 {
   struct state *st = (struct state *) closure;
+  if (! st->saved) return; /* Image might not be loaded yet */
   XClearWindow (st->dpy, st->window);
   XCopyArea (st->dpy, st->saved, st->window, st->gc,
              0, 0, st->saved_w, st->saved_h,
@@ -372,7 +374,7 @@ static const char *decayscreen_defaults [] = {
   "*delay:			10000",
   "*mode:			random",
   "*duration:			120",
-#ifdef USE_IPHONE
+#ifdef HAVE_MOBILE
   "*ignoreRotation:             True",
   "*rotateImages:               True",
 #endif

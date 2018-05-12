@@ -1,4 +1,4 @@
-/* analogtv, Copyright (c) 2003, 2004 Trevor Blackwell <tlb@tlb.org>
+/* analogtv, Copyright (c) 2003-2016 Trevor Blackwell <tlb@tlb.org>
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
  * documentation for any purpose is hereby granted without fee, provided that
@@ -14,6 +14,10 @@
 
 #include "thread_util.h"
 #include "xshm.h"
+
+#if defined(USE_IPHONE) || defined(HAVE_ANDROID)
+# define HAVE_MOBILE
+#endif
 
 /*
   You'll need these to generate standard NTSC TV signals
@@ -294,13 +298,13 @@ int analogtv_handle_events (analogtv *it);
 #define ANALOGTV_DEFAULTS_SHM
 #endif
 
-#ifndef USE_IPHONE
+#ifndef HAVE_MOBILE
 # define ANALOGTV_DEF_BRIGHTNESS "2"
 # define ANALOGTV_DEF_CONTRAST "150"
 #else
   /* Need to really crank this up for it to look good on the iPhone screen. */
 # define ANALOGTV_DEF_BRIGHTNESS "3"
-# define ANALOGTV_DEF_CONTRAST "1000"
+# define ANALOGTV_DEF_CONTRAST "400"
 #endif
 
 #define ANALOGTV_DEFAULTS \
