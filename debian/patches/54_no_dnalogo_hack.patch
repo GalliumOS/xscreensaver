@@ -1,3 +1,6 @@
+#
+# This hack is not built by default, and we are not shipping it either
+#
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
 --- xscreensaver.orig/driver/XScreenSaver.ad.in	2015-07-19 11:29:38.000000000 +0200

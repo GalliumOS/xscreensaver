@@ -40,3 +40,4 @@ usr/share/xscreensaver/glade/xscreensaver-demo.glade2
 debian/xscreensaver.svg /usr/share/pixmaps
 debian/xscreensaver-daemon.desktop usr/share/xscreensaver
 debian/xscreensaver-wrapper.sh usr/share/xscreensaver
+debian/xscreensaver.service usr/lib/systemd/user

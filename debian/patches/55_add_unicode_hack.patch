@@ -1,3 +1,7 @@
+#
+# This program is from the "unicode" package, just added here
+# as a convenience. See bug #560184
+#
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
 --- xscreensaver.orig/driver/XScreenSaver.ad.in	2015-07-19 11:29:42.000000000 +0200

@@ -1,3 +1,6 @@
+#
+# "Branding", show Planet Debian posts instead of Wikipedia pages
+#
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
 --- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:48:41.000000000 +0200

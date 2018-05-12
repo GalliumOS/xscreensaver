@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=Hydrostat
+Exec=/usr/lib/xscreensaver/hydrostat -root
+TryExec=/usr/lib/xscreensaver/hydrostat
+Comment=Wiggly squid or jellyfish with many tentacles. A muscular hydrostat is a biological structure used to move its host about, consisting of muscles with no skeletal support. It performs its hydraulic movement without fluid in a separate compartment, as in a hydrostatic skeleton. https://en.wikipedia.org/wiki/Muscular_hydrostat Written by Justin Windle and Jamie Zawinski.

@@ -1,0 +1,6 @@
+
+[Desktop Entry]
+Name=Discoball
+Exec=/usr/lib/xscreensaver/discoball -root
+TryExec=/usr/lib/xscreensaver/discoball
+Comment=A dusty, dented disco ball. Woop woop. Written by Jamie Zawinski.

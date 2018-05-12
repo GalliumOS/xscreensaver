@@ -1,6 +1,6 @@
 10_upstream_skip_retired_hacks.patch
+12_upstream_hurd-no-pthread_stack_min.patch
 20_hacks_man_section.patch
-20_hacks_maze_xpm_libs.patch
 20_skip_install-pam.patch
 21_driver_xscreensaver-getimage-video
 22_hacks_barcode.patch
@@ -20,6 +20,7 @@
 56_password_dialog_reworded.patch
 
 57_grabDesktopImages_default_off.patch
+75_Makefile_in-ignore-alien-platforms.patch
 80_Makefile_in-clean-fix.patch
 81_hacks_deterministic_file_order.patch
 90_remove_Easter_egg_about_version.patch

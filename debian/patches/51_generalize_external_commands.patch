@@ -1,3 +1,6 @@
+#
+# Use yelp or any installed terminal to display man pages
+#
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
 --- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:48:46.000000000 +0200

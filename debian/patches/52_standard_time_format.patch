@@ -1,3 +1,6 @@
+#
+# Use standard (ISO) date and time format
+#
 Index: xscreensaver/driver/XScreenSaver.ad.in
 ===================================================================
 --- xscreensaver.orig/driver/XScreenSaver.ad.in	2014-10-07 22:48:53.000000000 +0200

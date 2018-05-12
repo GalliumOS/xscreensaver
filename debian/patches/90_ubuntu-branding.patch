@@ -5,7 +5,7 @@
  *textFile:		@DEFAULT_TEXT_FILE@
  *textProgram:		fortune
 -*textURL:		http://planet.debian.org/rss20.xml
-+*textURL:		http://fridge.ubuntu.com/node/feed
++*textURL:		http://feeds.feedburner.com/ubuntu-news
  
  *overlayTextForeground:	#FFFF00
  *overlayTextBackground:	#000000

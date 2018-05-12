@@ -1,3 +1,7 @@
+#
+# logo-50-bad.xpm is a stripped down (64 colors) version
+# Fix for bug #304344
+#
 Index: xscreensaver-5.04/hacks/xanalogtv.c
 ===================================================================
 --- xscreensaver-5.04.orig/hacks/xanalogtv.c	2006-03-31 09:21:41.000000000 +0200

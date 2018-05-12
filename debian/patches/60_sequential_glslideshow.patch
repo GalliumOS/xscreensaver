@@ -14,9 +14,11 @@ Author: Dustin Kirkland <kirkland@ubuntu.com>
 Forwarded: no
 Last-Update: 2014-02-21
 
---- a/driver/xscreensaver-getimage-file
-+++ b/driver/xscreensaver-getimage-file
-@@ -843,7 +843,20 @@
+Index: xscreensaver-5.36-1ubuntu1/driver/xscreensaver-getimage-file
+===================================================================
+--- xscreensaver-5.36-1ubuntu1.orig/driver/xscreensaver-getimage-file
++++ xscreensaver-5.36-1ubuntu1/driver/xscreensaver-getimage-file
+@@ -855,7 +855,20 @@ sub find_random_file($) {
    my $max_tries = 50;
    for (my $i = 0; $i < $max_tries; $i++) {
  

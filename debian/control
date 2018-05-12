@@ -3,26 +3,26 @@ Section: x11
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XSBC-Original-Maintainer: Tormod Volden <debian.tormod@gmail.com>
-Build-Depends: bc, debhelper (>= 7.0), fortune-mod, libgtk2.0-dev, libpam0g-dev (>= 0.72), libgl1-mesa-dev | libgl-dev, libglu1-mesa-dev | xlibmesa-glu-dev | libglu-dev, xutils-dev, libxml2-dev, libglade2-dev, libjpeg-dev, libgle-dev, intltool, autotools-dev, libx11-dev, libxext-dev, libxinerama-dev, libxmu-dev, libxpm-dev, libxrandr-dev, libxss-dev, libxt-dev, libxtst-dev, libxxf86vm-dev, x11proto-core-dev, xbitmaps, quilt, dpkg-dev (>= 1.16.1)
-Standards-Version: 3.9.6
+Build-Depends: bc, debhelper (>= 9.0), fortune-mod, libgtk2.0-dev, libpam0g-dev, libgl1-mesa-dev | libgl-dev, libglu1-mesa-dev | xlibmesa-glu-dev | libglu-dev, xutils-dev, libxml2-dev, libglade2-dev, libjpeg-dev, libgle-dev, intltool, autotools-dev, libx11-dev, libxext-dev, libxinerama-dev, libxmu-dev, libxpm-dev, libxrandr-dev, libxss-dev, libxt-dev, libxtst-dev, libxxf86vm-dev, x11proto-core-dev, xbitmaps, quilt, dpkg-dev (>= 1.16.1)
+Standards-Version: 3.9.8
 Homepage: http://www.jwz.org/xscreensaver/
-Vcs-Git: git://anonscm.debian.org/collab-maint/xscreensaver.git
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/xscreensaver.git;a=summary
+Vcs-Git: https://anonscm.debian.org/git/collab-maint/xscreensaver.git
+Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/xscreensaver.git/
 
 Package: xscreensaver
 Architecture: any
 Depends: ${shlibs:Depends}, xscreensaver-data, ${misc:Depends}
-Breaks: funny-manpages (<< 1.3-1), suidmanager (<< 0.50), xscreensaver-gnome (<< 4.09-2), xscreensaver-nognome (<< 4.09-2), gnome-control-center (<< 1:2)
-Recommends: libjpeg-progs, perl5, miscfiles | wordlist, libgnomeui-0
-Suggests: xfishtank, xdaliclock, xscreensaver-gl, fortune, www-browser, qcam | streamer, gdm3 | kdm-gdmcompat
+Recommends: libjpeg-turbo-progs, perl5, miscfiles | wordlist, libgnomeui-0
+Suggests: xfishtank, xdaliclock, xscreensaver-data-extra, xscreensaver-gl, xscreensaver-gl-extra, fortune, www-browser, qcam | streamer, gdm3 | kdm-gdmcompat
 Description: Screensaver daemon and frontend for X11
  XScreenSaver is a modular screen saver and locker for X11,
  containing more than 200 screen savers.
  .
- This package includes the bare minimum needed to blank and lock
- your screen. Install this package if you prefer xscreensaver to
- gnome-screensaver. If you prefer gnome-screensaver, you don't
- need to install this package.
+ This package includes the bare minimum needed to blank and lock your
+ screen. Install this package if you want to use the xscreensaver engine
+ to control screen blanking and launching display modes ("hacks"). If
+ you only want to use other screensaver engines, you don't need to
+ install this package.
  .
  The graphical display modes are in the xscreensaver-data, 
  xscreensaver-data-extra, xscreensaver-gl and xscreensaver-gl-extra 
@@ -32,37 +32,32 @@ Package: xscreensaver-data
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libwww-perl
 Suggests: xscreensaver
-Replaces: xscreensaver (<< 5.04-3), gnome-screensaver (<< 2.15.4-0ubuntu1), xscreensaver-data-extra (<< 5.26-1ubuntu1)
-Breaks: xscreensaver (<< 5.04-3), gnome-screensaver (<< 2.26), kscreensaver-xsaver (<= 4:4.2.4-1), xscreensaver-data-extra (<< 5.26-1ubuntu1)
 Description: Screen saver modules for screensaver frontends
  XScreenSaver is a modular screen saver and locker for X11,
  containing more than 200 screen savers.
  .
  This package contains a small selection of graphical screen saver
  modules (listed below) from the xscreensaver collection. This package
- is used by both xscreensaver and gnome-screensaver.
+ can be used by xscreensaver and also some other screensaver engines.
  .
  This is the selected set of non-GL screensavers shipped by default:
  abstractile, binaryring, cwaves, deco, distort, fiberlamp, fuzzyflakes,
  galaxy, hexadrop, m6502, metaballs, penrose, ripples, shadebobs,
  slidescreen, swirl, tessellimage, xlyap.
  .
- More display modes can be found in xscreensaver-data-extra, xscreensaver-gl
- and xscreensaver-gl-extra packages.
+ More display modes can be found in xscreensaver-data-extra,
+ xscreensaver-gl and xscreensaver-gl-extra packages.
 
 Package: xscreensaver-data-extra
 Architecture: any
-Depends: ${shlibs:Depends}, xscreensaver-data (>= 5.04-3), dictionaries-common, libjpeg-progs, netpbm, ${misc:Depends}
-Enhances: xscreensaver, gnome-screensaver
-Replaces: xscreensaver (<< 5.04-3), xscreensaver-data (<< 5.26-1ubuntu1)
-Breaks: xscreensaver (<< 5.04-3), gnome-screensaver (<< 2.26), kscreensaver-xsaver (<= 4:4.2.4-1), xscreensaver-data (<< 5.26-1ubuntu1)
+Depends: ${shlibs:Depends}, xscreensaver-data, dictionaries-common, libjpeg-turbo-progs, netpbm, ${misc:Depends}
 Description: Extra screen saver modules for screensaver frontends
  XScreenSaver is a modular screen saver and locker for X11,
  containing more than 200 screen savers.
  .
- This package contains the rest of the 2D screen saver modules
- from the xscreensaver collection. This package is used by both
- xscreensaver and gnome-screensaver.
+ This package contains the rest of the 2D screen saver modules from
+ the xscreensaver collection. This package can be used by
+ xscreensaver and also some other screensaver engines.
  .
  This is the set of non-GL screensavers not shipped by default:
  anemone, anemotaxis, apollonian, apple2, attraction, barcode, blaster,
@@ -80,50 +75,46 @@ Description: Extra screen saver modules for screensaver frontends
  whirlwindwarp, wormhole, xanalogtv, xflame, xjack, xmatrix, xrayswarm,
  xspirograph, zoom.
  .
- More display modes can be found in the xscreensaver-data, xscreensaver-gl
- and xscreensaver-gl-extra packages.
+ More display modes can be found in the xscreensaver-data,
+ xscreensaver-gl and xscreensaver-gl-extra packages.
 
 Package: xscreensaver-gl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: xscreensaver
-Replaces: xscreensaver-data (<< 5.10-3), xscreensaver-gl-extra (<< 5.26-1ubuntu1)
-Breaks: xscreensaver (<< 5.04-3), gnome-screensaver (<< 2.26), kscreensaver-xsaver (<= 4:4.2.4-1), xscreensaver-gl-extra (<< 5.26-1ubuntu1)
 Description: GL(Mesa) screen saver modules for screensaver frontends
  XScreenSaver is a modular screen saver and locker for X11,
  containing more than 200 screen savers.
  .
- This package contains a small selection of 3D (OpenGL) screen
- saver modules from the xscreensaver collection. This package is
- used by both xscreensaver and gnome-screensaver.
+ This package contains a small selection of 3D (OpenGL) screen saver
+ modules from the xscreensaver collection. This package can be used by
+ xscreensaver and also some other screensaver engines.
  .
  This is the set of GL screensavers shipped by default:
  antinspect, antspotlight, atunnel, blinkbox, bubble3d, circuit,
- cityring, cubestorm, endgame, engine, flipflop, flipscreen3d,
- flyingtoasters, gears, geodesic, geodesicgears, gflux, glblur, glcells,
- gleidescope, glknots, glmatrix, glschool, glslideshow, glsnake, gltext,
- hypertorus, jigglypuff, kaleidocycle, lavalite, lockward, mirrorblob,
- moebius, moebiusgears, molecule, morph3d, pipes, polyhedra, polytopes,
- projectiveplane, pulsar, quasicrystal, queens, romanboy, sierpinski3d,
- sonar, spheremonics, splitflap, stonerview, superquadrics, topblock,
- voronoi, winduprobot.
+ cityring, cubestack, cubestorm, cubetwist, discoball, dymaxionmap,
+ endgame, energystream, engine, flipflop, flipscreen3d, flyingtoasters,
+ gears, geodesic, geodesicgears, gflux, glblur, glcells, gleidescope,
+ glknots, glmatrix, glschool, glslideshow, glsnake, gltext, hexstrut,
+ hydrostat, hypertorus, jigglypuff, kaleidocycle, lavalite, lockward,
+ mirrorblob, moebius, moebiusgears, molecule, morph3d, pipes, polyhedra,
+ polytopes, projectiveplane, pulsar, quasicrystal, queens, raverhoop,
+ romanboy, sierpinski3d, sonar, spheremonics, splitflap, splodesic,
+ stonerview, superquadrics, topblock, unicrud, voronoi, winduprobot.
  .
  More display modes can be found in the xscreensaver-data,
  xscreensaver-data-extra and xscreensaver-gl-extra packages.
 
 Package: xscreensaver-gl-extra
 Architecture: any
-Depends: ${shlibs:Depends}, xscreensaver-gl (>= 5.04-3), ${misc:Depends}
-Enhances: xscreensaver, gnome-screensaver
-Replaces: xscreensaver-gl (<< 5.26-1ubuntu1)
-Breaks: xscreensaver (<< 5.04-3), gnome-screensaver (<< 2.26), kscreensaver-xsaver (<= 4:4.2.4-1), xscreensaver-gl (<< 5.26-1ubuntu1)
+Depends: ${shlibs:Depends}, xscreensaver-gl, ${misc:Depends}
 Description: Extra GL(Mesa) screen saver modules for screensaver frontends
  XScreenSaver is a modular screen saver and locker for X11,
  containing more than 200 screen savers.
  .
  This package contains the rest of the 3D (OpenGL) screen saver
- modules from the xscreensaver collection. This package is used
- by both xscreensaver and gnome-screensaver.
+ modules from the xscreensaver collection. This package can be used by
+ xscreensaver and also some other screensaver engines.
  .
  This is the set of GL screensavers not shipped by default with
  xscreensaver-gl:
@@ -141,10 +132,8 @@ Description: Extra GL(Mesa) screen saver modules for screensaver frontends
 Package: xscreensaver-screensaver-webcollage
 Architecture: any
 Depends: ${shlibs:Depends}, xscreensaver-data-extra, ${misc:Depends}
-Breaks: xscreensaver-data-extra (<< 5.10-4)
-Replaces: xscreensaver-data-extra (<< 5.10-4)
 Description: Webcollage screen saver module from XScreenSaver
- This package ships the hack webcollage which displays images from random 
+ This package ships the mode webcollage which displays images from random
  web searches on the Internet.
  .
  WARNING: The Internet being what it is, absolutely anything might show up 
@@ -154,10 +143,8 @@ Description: Webcollage screen saver module from XScreenSaver
 Package: xscreensaver-screensaver-bsod
 Architecture: any
 Depends: ${shlibs:Depends}, xscreensaver-data-extra, ${misc:Depends}
-Breaks: xscreensaver-data-extra (<< 5.10-4)
-Replaces: xscreensaver-data-extra (<< 5.10-4)
 Description: BSOD screen saver module from XScreenSaver
- This package ships the hack BSOD that shows the popular Blue Screens of Death
+ This package ships the mode BSOD that shows the popular Blue Screens of Death
  from several OSes including BSD, Windows, Linux, Solaris, Apple and much more.
  .
  WARNING: This screensaver could be confused with a real BSOD and could lead an

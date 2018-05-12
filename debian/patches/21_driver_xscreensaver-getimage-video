@@ -1,3 +1,7 @@
+#
+# Add yet another possible source for video
+# "streamer" can capture from a video4linux device
+#
 Index: xscreensaver/driver/xscreensaver-getimage-video
 ===================================================================
 --- xscreensaver.orig/driver/xscreensaver-getimage-video	2013-11-23 16:16:12.000000000 +0100

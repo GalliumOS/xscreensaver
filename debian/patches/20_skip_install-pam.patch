@@ -1,3 +1,6 @@
+#
+# We use dh_installpam so we don't need to run this target
+#
 Index: xscreensaver/driver/Makefile.in
 ===================================================================
 --- xscreensaver.orig/driver/Makefile.in	2014-08-11 21:23:47.000000000 +0200

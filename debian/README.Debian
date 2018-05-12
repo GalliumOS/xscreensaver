@@ -27,3 +27,5 @@ but via a wrapper script. This wrapper is intended to set the
 newLoginCommand resource correctly depending on the currently
 running display manager.
 
+To have xscreensaver started by systemd, the user can run:
+ systemctl --user enable xscreensaver

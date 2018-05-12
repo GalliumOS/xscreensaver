@@ -1,14 +1,16 @@
-Index: xscreensaver-5.30/driver/prefs.c
+#
+# This "please upgrade" message would drive users crazy. Bug #819703
+#
+Index: xscreensaver-git/driver/prefs.c
 ===================================================================
---- xscreensaver-5.30.orig/driver/prefs.c	2014-08-08 19:57:20.000000000 +0200
-+++ xscreensaver-5.30/driver/prefs.c	2016-04-05 22:06:22.991049607 +0200
-@@ -1706,6 +1706,9 @@
- 
-      jwz, 2014
+--- xscreensaver-git.orig/driver/prefs.c	2016-05-28 19:06:12.441676714 +0200
++++ xscreensaver-git/driver/prefs.c	2016-05-28 19:06:12.437676714 +0200
+@@ -1736,6 +1736,8 @@
+      everyone involved, most especially the users.
    */
-+
+ 
 +  return 0;
 +
-   time_t now = time ((time_t *) 0);				/*   N   */
-   struct tm *tm = localtime (&now);				/*   o   */
-   const char *s = screensaver_id;				/*       */
+   time_t now = time ((time_t *) 0);				/*       */
+   struct tm *tm = localtime (&now);				/*   d   */
+   const char *s = screensaver_id;				/*   o   */

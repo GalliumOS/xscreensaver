@@ -1,6 +1,11 @@
---- a/hacks/Makefile.in
-+++ b/hacks/Makefile.in
-@@ -854,8 +854,8 @@
+#
+# For reproducible builds. Bug #819595
+#
+Index: xscreensaver-git/hacks/Makefile.in
+===================================================================
+--- xscreensaver-git.orig/hacks/Makefile.in	2016-12-11 14:23:49.948297205 +0100
++++ xscreensaver-git/hacks/Makefile.in	2016-12-11 14:23:49.948297205 +0100
+@@ -853,8 +853,8 @@
  
  m6502.h:
  	@echo "building m6502.h from $(srcdir)/images/m6502/*.asm"; \
